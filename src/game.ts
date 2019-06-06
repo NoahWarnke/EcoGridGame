@@ -26,6 +26,11 @@ class GameState {
   private numCleared = 0;
   
   /**
+   * This is the number of moves you've performed.
+   */
+  private numMoves = 0;
+  
+  /**
    * This is the actual grid. Each grid cell has four values.
    * type is a number indicating what kind of object is there.
    * del is a boolean indicating if the cell is currently marked for deletion.
@@ -272,6 +277,9 @@ class GameState {
    */
   public click(clickX: number, clickY: number) {
     
+    // Increment the number of moves.
+    this.numMoves++;
+    
     // See if a swap is valid.
     let [swapX, swapY] = this.getSwapCoordsFromClick(clickX, clickY);
     if (swapX === clickX && swapY === clickY) {
@@ -298,6 +306,11 @@ class GameState {
     
     // Do the deletion and replace with new things.
     this.deleteAndReplace();
+    
+    // Check for game completion.
+    if (this.getClearedFraction() == 1.0) {
+      log('You win!');
+    }
   }
   
   /**
@@ -313,6 +326,12 @@ class GameState {
     }
   }
   
+  /**
+   * Get the fraction of the grid that you've cleared.
+   */
+  public getClearedFraction() {
+    return this.numCleared / (this.nx * this.ny);
+  }
 }
 
 
@@ -323,3 +342,4 @@ gameState.showGrid();
 // Simulate a click at (2, 2).
 gameState.click(2, 2);
 gameState.showGrid();
+log((gameState.getClearedFraction() * 100) + '% done.');
