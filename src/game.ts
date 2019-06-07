@@ -53,6 +53,18 @@ class GameState {
     this.setGridToGridLayout(gridLayout);
   }
   
+  public getWidth() {
+    return this.nx;
+  }
+  
+  public getHeight() {
+    return this.ny;
+  }
+  
+  public getPieceAt(x: number, y: number) {
+    return this.grid[x][y];
+  }
+  
   /**
    * Generate a random grid layout of the given dimensions.
    */
@@ -264,9 +276,17 @@ class GameState {
       for (let y = 0; y < this.ny; y++) {
         let cell = this.grid[x][y];
         if (cell.del) {
+          log('del ' + x + ', ' + y);
           cell.del = false;
           cell.delTimer = 0;
-          cell.type = -1; // temp - should be a random new one.
+          
+          // Put in new cell values until one doesn't make a new 2x2 square.
+          let cornerX: number = undefined;
+          do {
+            cell.type = Math.floor(Math.random() * this.numTypes);
+            log ('try new ' + cell.type);
+            [cornerX, ] = this.checkForSquareOfSameType(x, y);
+          } while (cornerX !== -1);
         }
       }
     }
@@ -274,6 +294,7 @@ class GameState {
   
   /**
    * Handle a click on the given cell.
+   @returns false if no change to state, true otherwise.
    */
   public click(clickX: number, clickY: number) {
     
@@ -284,20 +305,20 @@ class GameState {
     let [swapX, swapY] = this.getSwapCoordsFromClick(clickX, clickY);
     if (swapX === clickX && swapY === clickY) {
       log('Cannot swap there!');
-      return;
+      return false;
     }
     
     // Do the swap.
     if (!this.performSwap(clickX, clickY, swapX, swapY)) {
       log('Swap failed (should not though)...');
-      return;
+      return false;
     }
     
     // See if we have a 2x2 square generated from the swap.
     let [cornerX, cornerY, squareType] = this.checkForSquareOfSameType(swapX, swapY);
     if (cornerX === -1 || cornerY === -1) {
       log('No new 2x2.');
-      return;
+      return true;
     }
     
     // Mark the square, and any connected same-type objects, for deletion.
@@ -311,6 +332,8 @@ class GameState {
     if (this.getClearedFraction() == 1.0) {
       log('You win!');
     }
+    
+    return true;
   }
   
   /**
@@ -334,12 +357,69 @@ class GameState {
   }
 }
 
+class GameScene {
+  private gameState: GameState;
+  private gamePieces: {type: number, x: number, y: number, entity: Entity}[];
+  private shape: Shape;
+  private materials: Material[];
+  
+  constructor() {
+    
+    // Create the state.
+    this.gameState = new GameState(3, GameState.getHardcoded4x4GridLayout());
+    
+    // Create shape and materials.
+    this.shape = new SphereShape();
+    this.materials = [new Material(), new Material(), new Material(), new Material(), new Material()];
+    this.materials[0].albedoColor = Color3.Red();
+    this.materials[1].albedoColor = Color3.Green();
+    this.materials[2].albedoColor = Color3.Blue();
+    this.materials[3].albedoColor = Color3.Purple();
+    this.materials[4].albedoColor = Color3.Yellow();
+    
+    this.gamePieces = [];
+    
+    this.matchEntitiesToState();
+  }
+  
+  public removeEntities() {
+    // Remove existing game pieces.
+    for (let i = 0; i < this.gamePieces.length; i++) {
+      engine.removeEntity(this.gamePieces[i].entity);
+    }
+    
+    // Create a list for our entities.
+    this.gamePieces = [];
+  }
+    
+  public matchEntitiesToState() {
+    
+    for (let x = 0; x < this.gameState.getWidth(); x++) {
+      for (let y = 0; y < this.gameState.getHeight(); y++) {
+        let type = this.gameState.getPieceAt(x, y).type;
+        if (type === 0) {
+          continue;
+        }
+        let ent = new Entity();
+        ent.addComponent(new SphereShape() /*this.shape*/);
+        ent.addComponent(new Transform({position: new Vector3(x, 1, y), scale: new Vector3(0.2, 0.2, 0.2)}));
+        ent.addComponent(this.materials[type - 1]);
+        
+        ent.addComponent(new OnClick(() => {
+          log('Swapping from ' + x + ', ' + y);
+          if (this.gameState.click(x, y)) {
+            // State changed, so wipe current entites and reduplicate to match state. Super inefficient, will do this better soon.
+            this.removeEntities();
+            this.matchEntitiesToState();
+          }
+          
+          
+        }));
+        engine.addEntity(ent); // Add it in!
+        this.gamePieces.push({type: type, x: x, y: y, entity: ent});
+      }
+    }
+  }
+}
 
-// Instantiate our new game state! Let's start with hardcoded for now.
-let gameState: GameState = new GameState(3, GameState.getHardcoded4x4GridLayout());
-gameState.showGrid();
-
-// Simulate a click at (2, 2).
-gameState.click(2, 2);
-gameState.showGrid();
-log((gameState.getClearedFraction() * 100) + '% done.');
+let gameScene = new GameScene();
