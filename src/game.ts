@@ -378,8 +378,8 @@ class GameScene {
     this.materials[4].albedoColor = Color3.Yellow();
     
     this.gamePieces = [];
-    
     this.matchEntitiesToState();
+    this.placeEnvironmentObjects();
   }
   
   /**
@@ -393,7 +393,7 @@ class GameScene {
   }
     
   public matchEntitiesToState() {
-    
+
     for (let x = 0; x < this.gameState.getWidth(); x++) {
       for (let y = 0; y < this.gameState.getHeight(); y++) {
         let type = this.gameState.getPieceAt(x, y).type;
@@ -404,7 +404,6 @@ class GameScene {
         ent.addComponent(new SphereShape() /*this.shape*/);
         ent.addComponent(new Transform({position: new Vector3(x, 1, y), scale: new Vector3(0.2, 0.2, 0.2)}));
         ent.addComponent(this.materials[type - 1]);
-        
         ent.addComponent(new OnClick(() => {
           log('Swapping from ' + x + ', ' + y);
           if (this.gameState.click(x, y)) {
@@ -419,6 +418,27 @@ class GameScene {
         this.gamePieces.push({type: type, x: x, y: y, entity: ent});
       }
     }
+  }
+
+  public placeEnvironmentObjects() {
+
+    let penguin = new Entity();
+    penguin.addComponent(new Transform({
+      position: new Vector3(1, 1, 1),
+      scale: new Vector3(0.5, 0.5, 0.5)
+    }));
+    penguin.addComponent(new GLTFShape("models/penguin.gltf"))
+    engine.addEntity(penguin);
+
+
+    let sealion = new Entity();
+    sealion.addComponent(new Transform({
+      position: new Vector3(5, 1, -2),
+      scale: new Vector3(0.5, 0.5, 0.5)
+    }));
+    sealion.addComponent(new GLTFShape("models/sealion.glb"))
+    engine.addEntity(sealion);
+
   }
 }
 
