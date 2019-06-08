@@ -77,7 +77,7 @@ class GameState {
     return this.ny;
   }
   
-  public getPieceAt(x: number, y: number) {
+  public getCellAt(x: number, y: number): GameCell {
     return this.grid[x][y];
   }
   
@@ -254,7 +254,6 @@ class GameState {
     while (again) {
       again = false;
       distance++;
-      log('Scanning, round ' + distance);
       for (let x = 0; x < this.nx; x++) {
         for (let y = 0; y < this.ny; y++) {
           if (!this.grid[x][y].del && this.grid[x][y].type === squareType) {
@@ -266,11 +265,12 @@ class GameState {
               || y > 0 && this.grid[x][y - 1].del
               || y < this.ny - 1 && this.grid[x][y + 1].del
             ) {
-              log('Deleting ' + x + ', ' + y);
               this.grid[x][y].del = true;
               this.grid[x][y].delTimer = distance;
-              this.grid[x][y].cleared = true;
-              this.numCleared++;
+              if (!this.grid[x][y].cleared) {
+                this.grid[x][y].cleared = true;
+                this.numCleared++;
+              }
               again = true;
             }
           }
@@ -287,7 +287,6 @@ class GameState {
       for (let y = 0; y < this.ny; y++) {
         let cell = this.grid[x][y];
         if (cell.del) {
-          log('del ' + x + ', ' + y);
           cell.del = false;
           cell.delTimer = 0;
           
@@ -295,7 +294,6 @@ class GameState {
           let cornerX: number = undefined;
           do {
             cell.type = Math.floor(Math.random() * this.numTypes);
-            log ('try new ' + cell.type);
             [cornerX, ] = this.checkForSquareOfSameType(x, y);
           } while (cornerX !== -1);
         }
@@ -376,8 +374,6 @@ class GameState {
   }
 }
 
-
-
 /**
  * Represents a single game piece in the game scene.
  */
@@ -387,23 +383,37 @@ class GamePiece {
   public x: number;
   public y: number;
   public type: number;
+  
+  // Stuff for sliding the piece.
   public sliding: boolean;
   public slideAlpha: number;
   public slideTargetX: number;
   public slideTargetY: number;
-  
   public resolveSlide: Function;
+  
+  // Stuff for animating the piece deletion/replacement.
+  public deleting: boolean;
+  public deleteTime: number; // seconds since delete anim started.
+  public deleteBlink: boolean;
+  public normalMat: Material;
+  public resolveDeletion: Function;
   
   constructor(x: number, y: number, type: number, entity: Entity) {
     this.x = x;
     this.y = y;
     this.type = type;
     this.entity = entity;
+    
     this.sliding = false;
     this.slideAlpha = 0;
     this.slideTargetX = x;
     this.slideTargetY = y;
     this.resolveSlide = undefined;
+    
+    this.deleting = false;
+    this.deleteTime = 0;
+    this.deleteBlink = false;
+    this.resolveDeletion = undefined;
   }
   
   /**
@@ -427,6 +437,28 @@ class GamePiece {
       }
     });
   }
+  
+  /**
+   * Start the deletion animation.
+   * @returns a Promise that resolves when the slide finishes.
+   */
+  showDeletion() {
+    this.deleting = true;
+    this.normalMat = this.entity.getComponent(Material); // save so we can go back to it when done.
+    return new Promise((resolve, reject) => {
+      let curMat = this.entity.getComponent(Material);
+      if (curMat !== this.normalMat) {
+        this.entity.removeComponent(curMat);
+        this.entity.addComponent(this.normalMat);
+      }
+      this.resolveDeletion = () => {
+        this.resolveDeletion = undefined;
+        this.deleting = false;
+        this.deleteTime = 0;
+        resolve();
+      }
+    })
+  }
 }
 
 class GamePieceSlideSystem implements ISystem {
@@ -448,8 +480,6 @@ class GamePieceSlideSystem implements ISystem {
       pos.x = (piece.slideTargetX - piece.x) * piece.slideAlpha + piece.x;
       pos.z = (piece.slideTargetY - piece.y) * piece.slideAlpha + piece.y; // DCL is dumb and y is up, not z.
       
-      log(piece.x + ", " + piece.y + ", " + piece.slideTargetX + ", " + piece.slideTargetY + ", " + piece.slideAlpha + ", " + pos.x + ", " + pos.z);
-      
       // Check for the end of the slide, and resolve it if so.
       if (piece.slideAlpha === 1) {
         piece.resolveSlide();
@@ -459,17 +489,74 @@ class GamePieceSlideSystem implements ISystem {
 }
 engine.addSystem(new GamePieceSlideSystem());
 
+class GamePieceDeleteSystem implements ISystem {
+  pieces: ComponentGroup = engine.getComponentGroup(GamePiece, Material);
+  blinkMat: Material = new Material();
+  
+  public update(dt: number) {
+    for (let entity of this.pieces.entities) {
+      let piece = entity.getComponent(GamePiece);
+      
+      if (!piece.deleting) {
+        continue;
+      }
+      
+      piece.deleteTime += dt;
+      
+      if (piece.deleteTime > 1.5) {
+        piece.resolveDeletion();
+        continue;
+      }
+      
+      // Blink twice every second.
+      let blink = Math.floor(piece.deleteTime * 4) % 2 === 0;
+      if (blink && !piece.deleteBlink) {
+        entity.removeComponent(piece.normalMat);
+        entity.addComponent(this.blinkMat);
+        piece.deleteBlink = true;
+      }
+      else if (!blink && piece.deleteBlink) {
+        entity.removeComponent(this.blinkMat);
+        entity.addComponent(piece.normalMat);
+        piece.deleteBlink = false;
+      }
+    }
+  }
+}
+engine.addSystem(new GamePieceDeleteSystem());
+
 class GameScene {
   private gameState: GameState;
   private gamePieces: GamePiece[];
   private shape: Shape;
   private materials: Material[];
   private animating: boolean;
+  private gameGroup: Entity;
+  private pieceSet: Entity;
   
   constructor() {
     
     // Create the state.
     this.gameState = new GameState(3, GameState.getHardcoded4x4GridLayout());
+    
+    // Game entity is a group that contains everything.
+    this.gameGroup = new Entity();
+    this.gameGroup.addComponent(new Transform({position: new Vector3(8, 0, 8)}));
+    engine.addEntity(this.gameGroup);
+    
+    // Pieceset entity is a group that contains all pieces.
+    this.pieceSet = new Entity();
+    this.pieceSet.setParent(this.gameGroup);
+    this.pieceSet.addComponent(new Transform({position: new Vector3(-(this.gameState.getWidth() - 1) / 2, 0.25, -(this.gameState.getHeight() - 1) / 2)}));
+    
+    // Board entity is a box that the pieces sit on. Doesn't need to be a box, or to exist at all, really.
+    let board = new Entity();
+    board.setParent(this.gameGroup);
+    board.addComponent(new BoxShape());
+    let black = new Material();
+    black.albedoColor = Color3.Black();
+    board.addComponent(black);
+    board.addComponent(new Transform({scale: new Vector3(this.gameState.getWidth() + 0.5, 0.5, this.gameState.getHeight() + 0.5)}));
     
     // Create shape and materials.
     this.shape = new SphereShape(); //GLTFShape("models/pumpkin.glb");
@@ -502,27 +589,25 @@ class GameScene {
 
     for (let x = 0; x < this.gameState.getWidth(); x++) {
       for (let y = 0; y < this.gameState.getHeight(); y++) {
-        let type = this.gameState.getPieceAt(x, y).type;
+        let type = this.gameState.getCellAt(x, y).type;
         if (type === 0) {
           continue;
         }
         
         let ent = new Entity();
+        ent.setParent(this.pieceSet);
         let piece = ent.addComponent(new GamePiece(x, y, type, ent));
         this.gamePieces.push(piece); // Keep track of all piece components, for internal logic.
-        ent.addComponent(new Transform({position: new Vector3(x, 1, y), scale: new Vector3(0.2, 0.2, 0.2)}));
+        ent.addComponent(new Transform({position: new Vector3(x, 0, y), scale: new Vector3(0.2, 0.2, 0.2)}));
         ent.addComponent(this.shape);
         ent.addComponent(this.materials[type - 1]);
         ent.addComponent(new OnClick(() => {
           this.handleClick(piece);
         }));
-        
-        engine.addEntity(ent); // Add it in!
-
-
       }
     }
   }
+  
   
   /**
    * Handle a click on a certain game piece.
@@ -557,6 +642,47 @@ class GameScene {
     
     this.animating = false;
     log('Slide done!');
+    
+    
+    // See if we have a 2x2 square generated from the swap.
+    let [cornerX, cornerY, squareType] = this.gameState.checkForSquareOfSameType(swapX, swapY);
+    if (cornerX === -1 || cornerY === -1) {
+      return;
+    }
+    
+    // Mark the square, and any connected same-type objects, for deletion.
+    this.gameState.markSquareForDeletion(cornerX, cornerY);
+    this.gameState.markConnectedForDeletion(squareType);
+    
+    let blinkPromises = [];
+    for (let piece of this.gamePieces) {
+      if (this.gameState.getCellAt(piece.x, piece.y).del) {
+        blinkPromises.push(piece.showDeletion());
+      }
+    }
+    log (blinkPromises.length);
+    await Promise.all(blinkPromises);
+    
+    log('blink done!');
+    
+    // Do the deletion and replace with new things.
+    this.gameState.deleteAndReplace();
+    
+    // Update pieces with new types.
+    for (let piece of this.gamePieces) {
+      let newType = this.gameState.getCellAt(piece.x, piece.y).type;
+      if (newType !== piece.type) {
+        log('swapping type to ' + newType + ' from ' + piece.type);
+        piece.type = newType;
+        piece.entity.removeComponent(piece.entity.getComponent(Material));
+        piece.entity.addComponent(this.materials[newType - 1]);
+      }
+    }
+    
+    // Check for game completion.
+    if (this.gameState.getClearedFraction() == 1.0) {
+      log('You win!');
+    }
   }
 
   public placeEnvironmentObjects() {
