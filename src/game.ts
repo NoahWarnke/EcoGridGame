@@ -388,8 +388,11 @@ class GamePiece {
   public y: number;
   public type: number;
   public sliding: boolean;
+  public slideAlpha: number;
   public slideTargetX: number;
   public slideTargetY: number;
+  
+  public resolveSlide: Function;
   
   constructor(x: number, y: number, type: number, entity: Entity) {
     this.x = x;
@@ -397,18 +400,71 @@ class GamePiece {
     this.type = type;
     this.entity = entity;
     this.sliding = false;
+    this.slideAlpha = 0;
     this.slideTargetX = x;
     this.slideTargetY = y;
+    this.resolveSlide = undefined;
+  }
+  
+  /**
+   * Start the piece sliding to a new position.
+   * @returns a Promise that resolves when the slide finishes.
+   */
+  slide(slideX: number, slideY: number) {
+    this.sliding = true;
+    this.slideAlpha = 0;
+    this.slideTargetX = slideX;
+    this.slideTargetY = slideY;
+    
+    return new Promise((resolve, reject) => {
+      this.resolveSlide = () => {
+        this.resolveSlide = undefined;
+        this.sliding = false;
+        this.x = this.slideTargetX;
+        this.y = this.slideTargetY;
+        this.slideAlpha = 0;
+        resolve();
+      }
+    });
   }
 }
 
-
+class GamePieceSlideSystem implements ISystem {
+  pieces: ComponentGroup = engine.getComponentGroup(GamePiece, Transform);
+  
+  public update(dt: number) {
+    for (let entity of this.pieces.entities) {
+      let piece = entity.getComponent(GamePiece);
+      
+      if (!piece.sliding) {
+        continue;
+      }
+      
+      // Calculate new alpha along slide (lasts for 0.75 seconds).
+      piece.slideAlpha = Math.min(1, piece.slideAlpha + dt / 0.75);
+      
+      // Update piece position.
+      let pos = entity.getComponent(Transform).position;
+      pos.x = (piece.slideTargetX - piece.x) * piece.slideAlpha + piece.x;
+      pos.z = (piece.slideTargetY - piece.y) * piece.slideAlpha + piece.y; // DCL is dumb and y is up, not z.
+      
+      log(piece.x + ", " + piece.y + ", " + piece.slideTargetX + ", " + piece.slideTargetY + ", " + piece.slideAlpha + ", " + pos.x + ", " + pos.z);
+      
+      // Check for the end of the slide, and resolve it if so.
+      if (piece.slideAlpha === 1) {
+        piece.resolveSlide();
+      }
+    }
+  }
+}
+engine.addSystem(new GamePieceSlideSystem());
 
 class GameScene {
   private gameState: GameState;
   private gamePieces: GamePiece[];
   private shape: Shape;
   private materials: Material[];
+  private animating: boolean;
   
   constructor() {
     
@@ -426,6 +482,9 @@ class GameScene {
     
     this.gamePieces = [];
     this.createEntities();
+    
+    this.animating = false;
+    
     //this.placeEnvironmentObjects();
   }
   
@@ -468,8 +527,12 @@ class GameScene {
   /**
    * Handle a click on a certain game piece.
    */
-  public handleClick(piece: GamePiece) {
+  public async handleClick(piece: GamePiece) {
     log('Clicked ' + piece.x + ', ' + piece.y);
+    
+    if (this.animating) {
+      return; // Can't click during an animation.
+    }
     
     // Increment the number of moves.
     this.gameState.incrementMoves();
@@ -487,12 +550,13 @@ class GameScene {
       return;
     }
     
-    // Update entity position and piece position.
-    piece.entity.getComponent(Transform).position.set(swapX, 1, swapY);
-    piece.x = swapX;
-    piece.y = swapY;
+    this.animating = true;
     
-    //
+    // Slide the piece to its new spot.
+    await piece.slide(swapX, swapY);
+    
+    this.animating = false;
+    log('Slide done!');
   }
 
   public placeEnvironmentObjects() {
