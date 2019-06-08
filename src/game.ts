@@ -382,13 +382,13 @@ class GameScene {
     this.matchEntitiesToState();
   }
   
+  /**
+   * Remove existing entities.
+   */
   public removeEntities() {
-    // Remove existing game pieces.
     for (let i = 0; i < this.gamePieces.length; i++) {
       engine.removeEntity(this.gamePieces[i].entity);
     }
-    
-    // Create a list for our entities.
     this.gamePieces = [];
   }
     
