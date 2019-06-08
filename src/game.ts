@@ -1,4 +1,24 @@
 
+/**
+ * Represents a single game cell in the game state.
+ * type is a number indicating what kind of object is there.
+ * del is a boolean indicating if the cell is currently marked for deletion.
+ * delTimer is a number indicating how many cells away from the 2x2 the cell is, if marked for deletion.
+ * cleared is a boolean indicating if the cell has previously been cleared.
+ */
+class GameCell {
+  public type: number;
+  public del: boolean;
+  public delTimer: number;
+  public cleared: boolean;
+  
+  constructor(type: number) {
+    this.type = type;
+    this.del = false;
+    this.delTimer = 0;
+    this.cleared = false;
+  }
+}
 
 /**
  * A GameState instance represents the current state of play for one instance of the Eco Grid Game :)
@@ -31,13 +51,9 @@ class GameState {
   private numMoves = 0;
   
   /**
-   * This is the actual grid. Each grid cell has four values.
-   * type is a number indicating what kind of object is there.
-   * del is a boolean indicating if the cell is currently marked for deletion.
-   * delTimer is a number indicating how many cells away from the 2x2 the cell is, if marked for deletion.
-   * cleared is a boolean indicating if the cell has previously been cleared.
+   * This is the actual grid. Each grid cell is a GameCell object.
    */
-  private grid: {type: number, del: boolean, delTimer: number, cleared: boolean}[][] = [];
+  private grid: GameCell[][] = [];
 
   /**
    * Construct a new GameState given the size of the grid and the number of objects in it.
@@ -109,12 +125,7 @@ class GameState {
     for (var x = 0; x < this.nx; x++) {
       this.grid[x] = [];
       for (var y = 0; y < this.ny; y++) {
-        this.grid[x].push({
-          type: gridLayout[x][y], //Math.floor(Math.random() * numTypes) + 1, // What type of object is at that position.
-          del: false,                                     // Object is scheduled for deletion.
-          delTimer: 0,                                    // How much of a delay for deletion animation.
-          cleared: false                                  // Position has been cleared before.
-        });
+        this.grid[x].push(new GameCell(gridLayout[x][y]));
       }
     }
   }
@@ -293,13 +304,21 @@ class GameState {
   }
   
   /**
+   * One more move has been made.
+   */
+  public incrementMoves() {
+    this.numMoves++;
+  }
+  
+  /**
    * Handle a click on the given cell.
    @returns false if no change to state, true otherwise.
    */
   public click(clickX: number, clickY: number) {
+    // NOTE, not using this function, because the game scene needs to know what happens at click at a more granular level.
     
     // Increment the number of moves.
-    this.numMoves++;
+    this.incrementMoves();
     
     // See if a swap is valid.
     let [swapX, swapY] = this.getSwapCoordsFromClick(clickX, clickY);
@@ -357,9 +376,37 @@ class GameState {
   }
 }
 
+
+
+/**
+ * Represents a single game piece in the game scene.
+ */
+@Component('gamePiece')
+class GamePiece {
+  public entity: Entity;
+  public x: number;
+  public y: number;
+  public type: number;
+  public sliding: boolean;
+  public slideTargetX: number;
+  public slideTargetY: number;
+  
+  constructor(x: number, y: number, type: number, entity: Entity) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.entity = entity;
+    this.sliding = false;
+    this.slideTargetX = x;
+    this.slideTargetY = y;
+  }
+}
+
+
+
 class GameScene {
   private gameState: GameState;
-  private gamePieces: {type: number, x: number, y: number, entity: Entity}[];
+  private gamePieces: GamePiece[];
   private shape: Shape;
   private materials: Material[];
   
@@ -369,7 +416,7 @@ class GameScene {
     this.gameState = new GameState(3, GameState.getHardcoded4x4GridLayout());
     
     // Create shape and materials.
-    this.shape = new SphereShape();
+    this.shape = new SphereShape(); //GLTFShape("models/pumpkin.glb");
     this.materials = [new Material(), new Material(), new Material(), new Material(), new Material()];
     this.materials[0].albedoColor = Color3.Red();
     this.materials[1].albedoColor = Color3.Green();
@@ -378,8 +425,8 @@ class GameScene {
     this.materials[4].albedoColor = Color3.Yellow();
     
     this.gamePieces = [];
-    this.matchEntitiesToState();
-    this.placeEnvironmentObjects();
+    this.createEntities();
+    //this.placeEnvironmentObjects();
   }
   
   /**
@@ -392,7 +439,7 @@ class GameScene {
     this.gamePieces = [];
   }
     
-  public matchEntitiesToState() {
+  public createEntities() {
 
     for (let x = 0; x < this.gameState.getWidth(); x++) {
       for (let y = 0; y < this.gameState.getHeight(); y++) {
@@ -400,34 +447,62 @@ class GameScene {
         if (type === 0) {
           continue;
         }
+        
         let ent = new Entity();
-        ent.addComponent(new SphereShape() /*this.shape*/);
+        let piece = ent.addComponent(new GamePiece(x, y, type, ent));
+        this.gamePieces.push(piece); // Keep track of all piece components, for internal logic.
         ent.addComponent(new Transform({position: new Vector3(x, 1, y), scale: new Vector3(0.2, 0.2, 0.2)}));
+        ent.addComponent(this.shape);
         ent.addComponent(this.materials[type - 1]);
         ent.addComponent(new OnClick(() => {
-          log('Swapping from ' + x + ', ' + y);
-          if (this.gameState.click(x, y)) {
-            // State changed, so wipe current entites and reduplicate to match state. Super inefficient, will do this better soon.
-            this.removeEntities();
-            this.matchEntitiesToState();
-          }
-          
-          
+          this.handleClick(piece);
         }));
+        
         engine.addEntity(ent); // Add it in!
-        this.gamePieces.push({type: type, x: x, y: y, entity: ent});
+
+
       }
     }
+  }
+  
+  /**
+   * Handle a click on a certain game piece.
+   */
+  public handleClick(piece: GamePiece) {
+    log('Clicked ' + piece.x + ', ' + piece.y);
+    
+    // Increment the number of moves.
+    this.gameState.incrementMoves();
+    
+    // See if a swap is valid.
+    let [swapX, swapY] = this.gameState.getSwapCoordsFromClick(piece.x, piece.y);
+    if (swapX === piece.x && swapY === piece.y) {
+      log('Cannot swap there!'); // TODO buzz noise
+      return;
+    }
+    
+    // Update GameState.
+    if (!this.gameState.performSwap(piece.x, piece.y, swapX, swapY)) {
+      log('Swap failed (should never happen)...');
+      return;
+    }
+    
+    // Update entity position and piece position.
+    piece.entity.getComponent(Transform).position.set(swapX, 1, swapY);
+    piece.x = swapX;
+    piece.y = swapY;
+    
+    //
   }
 
   public placeEnvironmentObjects() {
 
     let penguin = new Entity();
     penguin.addComponent(new Transform({
-      position: new Vector3(1, 1, 1),
-      scale: new Vector3(0.5, 0.5, 0.5)
+      position: new Vector3(8, 8, 2),
+      scale: new Vector3(1, 1, 1)
     }));
-    penguin.addComponent(new GLTFShape("models/penguin.gltf"))
+    penguin.addComponent(new GLTFShape("models/shoe.glb"))
     engine.addEntity(penguin);
 
 
