@@ -198,28 +198,17 @@ class GameState {
   public checkForSquareOfSameType(swapX: number, swapY: number): [number, number, number] {
     
     // Only need to look at the up-to 4 2x2 squares that include swapX, swapY, since that's the only thing that changed.
-    for (let x = Math.max(0, swapX - 1); x < Math.min(this.nx - 1, swapX); x++) {
-      for (let y = Math.max(0, swapY - 1); y < Math.min(this.ny - 1, swapY); y++) {
+    for (let x = Math.max(0, swapX - 1); x < Math.min(this.nx - 1, swapX + 1); x++) {
+      for (let y = Math.max(0, swapY - 1); y < Math.min(this.ny - 1, swapY + 1); y++) {
         log ('checking ' + x + ', ' + y);
         
-        // Check all four boxes.
-        let squareType = -1;
-        let notYetInvalid = true; //
-        for (let squareX = 0; squareX < 2 && notYetInvalid; squareX++) {
-          for (let squareY = 0; squareY < 2 && notYetInvalid; squareY++) {
-            if (squareType === -1) {
-              squareType = this.grid[x + squareX][y + squareY].type; // Type of lower left corner is the one we need the other 3 to be.
-            }
-            else {
-              if (this.grid[x + squareX][y + squareY].type !== squareType) {
-                log ('failed due to ' + (x + squareX) + ', ' + (y + squareY) + ': ' + squareType + ' but not ' + this.grid[x + squareX][y + squareY].type);
-                notYetInvalid = false; // Hit a wrong-type object.
-              }
-            }
-          }
-        }
-        
-        if (notYetInvalid) {
+        // Check all four cells in this have the same type.
+        let squareType = this.grid[x][y].type;
+        if (
+          this.grid[x + 1][y    ].type === squareType &&
+          this.grid[x    ][y + 1].type === squareType &&
+          this.grid[x + 1][y + 1].type === squareType
+        ) {
           log('Success! Found square at ' + x + ', ' + y);
           return [x, y, squareType];
         }
@@ -293,7 +282,7 @@ class GameState {
           // Put in new cell values until one doesn't make a new 2x2 square.
           let cornerX: number = undefined;
           do {
-            cell.type = Math.floor(Math.random() * this.numTypes);
+            cell.type = Math.floor(Math.random() * this.numTypes) + 1;
             [cornerX, ] = this.checkForSquareOfSameType(x, y);
           } while (cornerX !== -1);
         }
@@ -444,10 +433,23 @@ class GamePiece {
    */
   showDeletion() {
     this.deleting = true;
-    this.normalMat = this.entity.getComponent(Material); // save so we can go back to it when done.
+    try {
+      this.normalMat = this.entity.getComponent(Material); // save so we can go back to it when done.
+    }
+    catch (e) {
+      log('Unable to find normalMat for piece at ' + this.x + ', ' + this.y + ' with type ' + this.type);
+      this.normalMat = undefined;
+    }
     return new Promise((resolve, reject) => {
-      let curMat = this.entity.getComponent(Material);
-      if (curMat !== this.normalMat) {
+      let curMat: Material;
+      try {
+        let curMat = this.entity.getComponent(Material);
+      }
+      catch(e) {
+        log('Unable to find curMat for piece at ' + this.x + ', ' + this.y + ' with type ' + this.type);
+        curMat = undefined;
+      }
+      if (curMat !== this.normalMat && curMat !== undefined) {
         this.entity.removeComponent(curMat);
         this.entity.addComponent(this.normalMat);
       }
@@ -557,6 +559,9 @@ class GameScene {
     black.albedoColor = Color3.Black();
     board.addComponent(black);
     board.addComponent(new Transform({scale: new Vector3(this.gameState.getWidth() + 0.5, 0.5, this.gameState.getHeight() + 0.5)}));
+    board.addComponent(new OnClick(() => {
+      this.updateMats();
+    }));
     
     // Create shape and materials.
     this.shape = new SphereShape(); //GLTFShape("models/pumpkin.glb");
@@ -608,6 +613,25 @@ class GameScene {
     }
   }
   
+  /* Temporary, to try and get the types to update correctly. */
+  public updateMats() {
+    log('updateMats');
+    for (let piece of this.gamePieces) {
+      try {
+        log(piece.x + ", " + piece.y);
+        let mat = piece.entity.getComponent(Material);
+        piece.entity.removeComponent(mat);
+        log('successful removal');
+        piece.entity.addComponent(this.materials[this.gameState.getCellAt(piece.x, piece.y).type - 1]);
+        
+      }
+      catch (e) {
+        log('no mat found at ' + piece.x + ", " + piece.y);
+      }
+      
+      //piece.entity.addComponent(this.materials[this.gameState.getCellAt(piece.x, piece.y).type - 1]);
+    }
+  }
   
   /**
    * Handle a click on a certain game piece.
@@ -635,18 +659,19 @@ class GameScene {
       return;
     }
     
+    // Lock game until animations are done.
     this.animating = true;
     
     // Slide the piece to its new spot.
     await piece.slide(swapX, swapY);
     
-    this.animating = false;
-    log('Slide done!');
-    
+    log('Slide done.');
     
     // See if we have a 2x2 square generated from the swap.
     let [cornerX, cornerY, squareType] = this.gameState.checkForSquareOfSameType(swapX, swapY);
     if (cornerX === -1 || cornerY === -1) {
+      this.animating = false;
+      log ('No square found.');
       return;
     }
     
@@ -660,10 +685,10 @@ class GameScene {
         blinkPromises.push(piece.showDeletion());
       }
     }
-    log (blinkPromises.length);
+    log ('Blinking ' + blinkPromises.length);
     await Promise.all(blinkPromises);
     
-    log('blink done!');
+    log ('Blinking done.');
     
     // Do the deletion and replace with new things.
     this.gameState.deleteAndReplace();
@@ -671,11 +696,20 @@ class GameScene {
     // Update pieces with new types.
     for (let piece of this.gamePieces) {
       let newType = this.gameState.getCellAt(piece.x, piece.y).type;
-      if (newType !== piece.type) {
+      if (newType === 0) {
+        log('piece at hole? ' + piece.x + ', ' + piece.y);
+        this.gameState.showGrid();
+      }
+      else if (newType !== piece.type) {
         log('swapping type to ' + newType + ' from ' + piece.type);
         piece.type = newType;
-        piece.entity.removeComponent(piece.entity.getComponent(Material));
-        piece.entity.addComponent(this.materials[newType - 1]);
+        try {
+          piece.entity.removeComponent(piece.entity.getComponent(Material));
+          piece.entity.addComponent(this.materials[newType - 1]);
+        }
+        catch(e) {
+          log('Failed to find material for piece at ' + piece.x + ', ' + piece.y);
+        }
       }
     }
     
@@ -683,6 +717,9 @@ class GameScene {
     if (this.gameState.getClearedFraction() == 1.0) {
       log('You win!');
     }
+    
+    // Unlock game state now that animations and updates are done.
+    this.animating = false;
   }
 
   public placeEnvironmentObjects() {
