@@ -4,8 +4,7 @@ import GamePiece from 'gamepiece';
  * Updates a GamePiece as it is deleted (collected as trash).
  */
 export default class GamePieceDeleteSystem implements ISystem {
-  pieces: ComponentGroup = engine.getComponentGroup(GamePiece, Material);
-  blinkMat: Material = new Material();
+  pieces: ComponentGroup = engine.getComponentGroup(GamePiece, Transform);
   
   public update(dt: number) {
     for (let entity of this.pieces.entities) {
@@ -25,13 +24,11 @@ export default class GamePieceDeleteSystem implements ISystem {
       // Blink twice every second.
       let blink = Math.floor(piece.deleteTime * 4) % 2 === 0;
       if (blink && !piece.deleteBlink) {
-        entity.removeComponent(piece.normalMat);
-        entity.addComponent(this.blinkMat);
+        entity.getComponent(Transform).scale.set(0.2, 0.2, 0.2);
         piece.deleteBlink = true;
       }
       else if (!blink && piece.deleteBlink) {
-        entity.removeComponent(this.blinkMat);
-        entity.addComponent(piece.normalMat);
+        entity.getComponent(Transform).scale.set(0.3, 0.3, 0.3);
         piece.deleteBlink = false;
       }
     }

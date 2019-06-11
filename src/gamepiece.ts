@@ -5,6 +5,7 @@
 @Component('gamePiece')
 export default class GamePiece {
   public entity: Entity;
+  public shape: Shape;
   public x: number;
   public y: number;
   public type: number;
@@ -20,7 +21,6 @@ export default class GamePiece {
   public deleting: boolean;
   public deleteTime: number; // seconds since delete anim started.
   public deleteBlink: boolean;
-  public normalMat: Material;
   public resolveDeletion: Function;
   
   constructor(x: number, y: number, type: number, entity: Entity) {
@@ -69,26 +69,9 @@ export default class GamePiece {
    */
   showDeletion() {
     this.deleting = true;
-    try {
-      this.normalMat = this.entity.getComponent(Material); // save so we can go back to it when done.
-    }
-    catch (e) {
-      log('Unable to find normalMat for piece at ' + this.x + ', ' + this.y + ' with type ' + this.type);
-      this.normalMat = undefined;
-    }
+    
     return new Promise((resolve, reject) => {
-      let curMat: Material;
-      try {
-        let curMat = this.entity.getComponent(Material);
-      }
-      catch(e) {
-        log('Unable to find curMat for piece at ' + this.x + ', ' + this.y + ' with type ' + this.type);
-        curMat = undefined;
-      }
-      if (curMat !== this.normalMat && curMat !== undefined) {
-        this.entity.removeComponent(curMat);
-        this.entity.addComponent(this.normalMat);
-      }
+      this.entity.getComponent(Transform).scale.set(1, 1, 1); // Make sure we're at normal scale.
       this.resolveDeletion = () => {
         this.resolveDeletion = undefined;
         this.deleting = false;

@@ -8,22 +8,17 @@ export default class GameState {
   /**
    * This is the X size of the grid.
    */
-  private nx = 4;
+  private nx: number;
   
   /**
    * This is the Y size of the grid.
    */
-  private ny = 4;
+  private ny: number;
   
   /**
    * This is the number of object types in the grid (not counting the hole).
    */
-  private numTypes = 3;
-  
-  /**
-   * This is the number of objects cleared from the grid. Get this to n*n-1 to win!
-   */
-  private numCleared = 0;
+  private numTypes: number;
   
   /**
    * This is the number of moves you've performed.
@@ -185,6 +180,7 @@ export default class GameState {
         // Check all four cells in this have the same type.
         let squareType = this.grid[x][y].type;
         if (
+          squareType !== this.numTypes && // If it's of the done type, can't make squares out of it.
           this.grid[x + 1][y    ].type === squareType &&
           this.grid[x    ][y + 1].type === squareType &&
           this.grid[x + 1][y + 1].type === squareType
@@ -207,7 +203,6 @@ export default class GameState {
         this.grid[cornerX + squareX][cornerY + squareY].del = true;
         this.grid[cornerX + squareX][cornerY + squareY].delTimer = 0;
         this.grid[cornerX + squareX][cornerY + squareY].cleared = true;
-        this.numCleared++;
       }
     }
   }
@@ -238,7 +233,6 @@ export default class GameState {
               this.grid[x][y].delTimer = distance;
               if (!this.grid[x][y].cleared) {
                 this.grid[x][y].cleared = true;
-                this.numCleared++;
               }
               again = true;
             }
@@ -260,11 +254,14 @@ export default class GameState {
           cell.delTimer = 0;
           
           // Put in new cell values until one doesn't make a new 2x2 square.
+          /*
           let cornerX: number = undefined;
           do {
             cell.type = Math.floor(Math.random() * this.numTypes) + 1;
             [cornerX, ] = this.checkForSquareOfSameType(x, y);
           } while (cornerX !== -1);
+          */
+          cell.type = this.numTypes; // The type for pieces that are 'done' (aka, trash picked up, so now nature.)
         }
       }
     }
@@ -314,11 +311,6 @@ export default class GameState {
     // Do the deletion and replace with new things.
     this.deleteAndReplace();
     
-    // Check for game completion.
-    if (this.getClearedFraction() == 1.0) {
-      log('You win!');
-    }
-    
     return true;
   }
   
@@ -333,12 +325,5 @@ export default class GameState {
       }
       log(line);
     }
-  }
-  
-  /**
-   * Get the fraction of the grid that you've cleared.
-   */
-  public getClearedFraction() {
-    return this.numCleared / (this.nx * this.ny);
   }
 }

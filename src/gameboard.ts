@@ -1,3 +1,5 @@
+import GameBoardSpecification from 'gameboardspecification';
+import PieceType from 'gameboardspecification';
 import GameState from 'gamestate';
 import GamePiece from 'gamepiece';
 
@@ -6,26 +8,45 @@ import GamePiece from 'gamepiece';
 export default class GameBoard {
   private gameState: GameState;
   private gamePieces: GamePiece[];
-  private shape: Shape;
-  private materials: Material[];
+  
+  private pieceTypes: TrashType[];
+  private donePieceShapes: Shape[];
+  
   private animating: boolean;
+  
   private gameGroup: Entity;
   private pieceSet: Entity;
   
-  constructor() {
+  constructor(spec: GameBoardSpecification) {
     
     // Create the state.
-    this.gameState = new GameState(3, GameState.getHardcoded4x4GridLayout());
+    this.gameState = new GameState(
+      spec.pieceTypes.length,
+      GameState.generateRandomGridLayout(
+        spec.dimensions.x,
+        spec.dimensions.y,
+        spec.pieceTypes.length
+      )
+    );
+    
+    // Save our list of trash types and
+    this.pieceTypes = spec.pieceTypes;
+    this.donePieceShapes = spec.donePieceShapes;
     
     // Game entity is a group that contains everything.
     this.gameGroup = new Entity();
-    this.gameGroup.addComponent(new Transform({position: new Vector3(8, 0, 8)}));
+    this.gameGroup.addComponent(spec.transform);
     engine.addEntity(this.gameGroup);
     
-    // Pieceset entity is a group that contains all pieces.
+    // Pieceset entity is a group that contains all pieces, and has its center at the lower left corner of the board.
     this.pieceSet = new Entity();
     this.pieceSet.setParent(this.gameGroup);
-    this.pieceSet.addComponent(new Transform({position: new Vector3(-(this.gameState.getWidth() - 1) / 2, 0.25, -(this.gameState.getHeight() - 1) / 2)}));
+    this.pieceSet.addComponent(new Transform({
+      position: new Vector3(
+        -(this.gameState.getWidth() - 1) / 2,
+        0.25,
+        -(this.gameState.getHeight() - 1) / 2)
+    }));
     
     // Board entity is a box that the pieces sit on. Doesn't need to be a box, or to exist at all, really.
     let board = new Entity();
@@ -35,21 +56,14 @@ export default class GameBoard {
     black.albedoColor = Color3.Black();
     board.addComponent(black);
     board.addComponent(new Transform({scale: new Vector3(this.gameState.getWidth() + 0.5, 0.5, this.gameState.getHeight() + 0.5)}));
+    /*
     board.addComponent(new OnClick(() => {
       this.updateMats();
     }));
-    
-    // Create shape and materials.
-    this.shape = new SphereShape(); //GLTFShape("models/pumpkin.glb");
-    this.materials = [new Material(), new Material(), new Material(), new Material(), new Material()];
-    this.materials[0].albedoColor = Color3.Red();
-    this.materials[1].albedoColor = Color3.Green();
-    this.materials[2].albedoColor = Color3.Blue();
-    this.materials[3].albedoColor = Color3.Purple();
-    this.materials[4].albedoColor = Color3.Yellow();
+    */
     
     this.gamePieces = [];
-    this.createEntities();
+    this.createPieceEntities();
     
     this.animating = false;
     
@@ -66,7 +80,7 @@ export default class GameBoard {
     this.gamePieces = [];
   }
     
-  public createEntities() {
+  public createPieceEntities() {
 
     for (let x = 0; x < this.gameState.getWidth(); x++) {
       for (let y = 0; y < this.gameState.getHeight(); y++) {
@@ -75,13 +89,22 @@ export default class GameBoard {
           continue;
         }
         
+        // Create a new entity for the piece, and add it to the pieceSet group.
         let ent = new Entity();
         ent.setParent(this.pieceSet);
+        
+        // Create a new GamePiece component and add it to the entity.
         let piece = ent.addComponent(new GamePiece(x, y, type, ent));
-        this.gamePieces.push(piece); // Keep track of all piece components, for internal logic.
-        ent.addComponent(new Transform({position: new Vector3(x, 0, y), scale: new Vector3(0.2, 0.2, 0.2)}));
-        ent.addComponent(this.shape);
-        ent.addComponent(this.materials[type - 1]);
+        this.gamePieces.push(piece); // Also keep track of all GamePiece components, for internal logic.
+        
+        // Position the piece on the board.
+        ent.addComponent(new Transform({position: new Vector3(x, 0, y), scale: new Vector3(0.3, 0.3, 0.3)}));
+        
+        // Give the piece the correct shape.
+        let pieceType = this.pieceTypes[type - 1];
+        piece.shape = pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)]; // Save shape (can't use getComponent to get it currently)
+        ent.addComponent(piece.shape);
+        
         ent.addComponent(new OnClick(() => {
           this.handleClick(piece);
         }));
@@ -90,6 +113,7 @@ export default class GameBoard {
   }
   
   /* Temporary, to try and get the types to update correctly. */
+  /*
   public updateMats() {
     log('updateMats');
     for (let piece of this.gamePieces) {
@@ -111,6 +135,7 @@ export default class GameBoard {
       //piece.entity.addComponent(this.materials[this.gameState.getCellAt(piece.x, piece.y).type - 1]);
     }
   }
+  */
   
   /**
    * Handle a click on a certain game piece.
@@ -174,27 +199,38 @@ export default class GameBoard {
     
     // Update pieces with new types.
     for (let piece of this.gamePieces) {
+      
+      // Grab new cell type.
       let newType = this.gameState.getCellAt(piece.x, piece.y).type;
       if (newType === 0) {
+        // Ignore hole.
         log('piece at hole? ' + piece.x + ', ' + piece.y);
-        this.gameState.showGrid();
       }
-      else if (newType !== piece.type) {
+      else if (newType === this.pieceTypes.length) {
+        // It's now of the 'done' type
+        log('Piece is done!');
+        
+        let oldShape = piece.shape;
+        piece.entity.removeComponent(oldShape);
+        piece.shape = this.donePieceShapes[Math.floor(Math.random() * this.donePieceShapes.length)];
+        piece.entity.addComponent(piece.shape);
+        
+        /*.
         log('swapping type to ' + newType + ' from ' + piece.type);
         piece.type = newType;
         try {
-          piece.entity.removeComponent(piece.entity.getComponent(Material));
-          piece.entity.addComponent(this.materials[newType - 1]);
+          //let oldShape = piece.entity.getComponent(Shape); // Doesn't work currently, hence piece.shape
+          let oldShape = piece.shape;
+          piece.entity.removeComponent(oldShape);
+          let pieceType = this.pieceTypes[piece.type - 1];
+          piece.shape = pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)];
+          piece.entity.addComponent(piece.shape);
         }
         catch(e) {
-          log('Failed to find material for piece at ' + piece.x + ', ' + piece.y);
+          log('Failed to find shape for piece at ' + piece.x + ', ' + piece.y + ': ' + e);
         }
+        */
       }
-    }
-    
-    // Check for game completion.
-    if (this.gameState.getClearedFraction() == 1.0) {
-      log('You win!');
     }
     
     // Unlock game state now that animations and updates are done.
