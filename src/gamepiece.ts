@@ -5,7 +5,6 @@
 @Component('gamePiece')
 export default class GamePiece {
   public entity: Entity;
-  public shape: Shape;
   public x: number;
   public y: number;
   public type: number;

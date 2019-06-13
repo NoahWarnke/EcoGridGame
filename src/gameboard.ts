@@ -1,15 +1,16 @@
-import GameBoardSpecification from 'gameboardspecification';
-import PieceType from 'gameboardspecification';
+import GameBoardSpecification from 'igameboardspecification';
+import PieceType from 'ipiecetype';
 import GameState from 'gamestate';
 import GamePiece from 'gamepiece';
 
 /**
- * Represents a game board with its pieces. */
+ * Represents a game board with its pieces.
+ */
 export default class GameBoard {
   private gameState: GameState;
   private gamePieces: GamePiece[];
   
-  private pieceTypes: TrashType[];
+  private pieceTypes: PieceType[];
   private donePieceShapes: Shape[];
   
   private animating: boolean;
@@ -17,19 +18,19 @@ export default class GameBoard {
   private gameGroup: Entity;
   private pieceSet: Entity;
   
+  /**
+   * Construct a new GameBoard from the given GameBoardSpec.
+   */
   constructor(spec: GameBoardSpecification) {
     
     // Create the state.
     this.gameState = new GameState(
       spec.pieceTypes.length,
-      GameState.generateRandomGridLayout(
-        spec.dimensions.x,
-        spec.dimensions.y,
-        spec.pieceTypes.length
-      )
+      spec.dimensions.x,
+      spec.dimensions.y
     );
     
-    // Save our list of trash types and
+    // Save our list of trash types and done piece shapes.
     this.pieceTypes = spec.pieceTypes;
     this.donePieceShapes = spec.donePieceShapes;
     
@@ -56,11 +57,6 @@ export default class GameBoard {
     black.albedoColor = Color3.Black();
     board.addComponent(black);
     board.addComponent(new Transform({scale: new Vector3(this.gameState.getWidth() + 0.5, 0.5, this.gameState.getHeight() + 0.5)}));
-    /*
-    board.addComponent(new OnClick(() => {
-      this.updateMats();
-    }));
-    */
     
     this.gamePieces = [];
     this.createPieceEntities();
@@ -102,40 +98,15 @@ export default class GameBoard {
         
         // Give the piece the correct shape.
         let pieceType = this.pieceTypes[type - 1];
-        piece.shape = pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)]; // Save shape (can't use getComponent to get it currently)
-        ent.addComponent(piece.shape);
+        ent.addComponent(pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)]);
         
+        // Make sure the piece is clickable!
         ent.addComponent(new OnClick(() => {
           this.handleClick(piece);
         }));
       }
     }
   }
-  
-  /* Temporary, to try and get the types to update correctly. */
-  /*
-  public updateMats() {
-    log('updateMats');
-    for (let piece of this.gamePieces) {
-      
-      try {
-        log(piece.x + ", " + piece.y);
-        let mat = piece.entity.getComponent(Material);
-        piece.entity.removeComponent(mat);
-        log('successful removal');
-        piece.entity.addComponent(this.materials[this.gameState.getCellAt(piece.x, piece.y).type - 1]);
-        
-
-        
-      }
-      catch (e) {
-        log('no mat found at ' + piece.x + ", " + piece.y);
-      }
-      
-      //piece.entity.addComponent(this.materials[this.gameState.getCellAt(piece.x, piece.y).type - 1]);
-    }
-  }
-  */
   
   /**
    * Handle a click on a certain game piece.
@@ -172,7 +143,7 @@ export default class GameBoard {
     log('Slide done.');
     
     // See if we have a 2x2 square generated from the swap.
-    let [cornerX, cornerY, squareType] = this.gameState.checkForSquareOfSameType(swapX, swapY);
+    let [cornerX, cornerY, squareType] = this.gameState.checkForSquareOfSameTypeAroundPoint(swapX, swapY);
     if (cornerX === -1 || cornerY === -1) {
       this.animating = false;
       log ('No square found.');
@@ -197,39 +168,16 @@ export default class GameBoard {
     // Do the deletion and replace with new things.
     this.gameState.deleteAndReplace();
     
-    // Update pieces with new types.
+    // Update pieces with new done types.
     for (let piece of this.gamePieces) {
       
-      // Grab new cell type.
-      let newType = this.gameState.getCellAt(piece.x, piece.y).type;
-      if (newType === 0) {
-        // Ignore hole.
-        log('piece at hole? ' + piece.x + ', ' + piece.y);
-      }
-      else if (newType === this.pieceTypes.length) {
-        // It's now of the 'done' type
+      // Grab new cell type, and if it's -1 but the piece's type isn't -1, we know we have a swap to do!
+      if (piece.type !== -1 && this.gameState.getCellAt(piece.x, piece.y).type === -1) {
+        
         log('Piece is done!');
         
-        let oldShape = piece.shape;
-        piece.entity.removeComponent(oldShape);
-        piece.shape = this.donePieceShapes[Math.floor(Math.random() * this.donePieceShapes.length)];
-        piece.entity.addComponent(piece.shape);
-        
-        /*.
-        log('swapping type to ' + newType + ' from ' + piece.type);
-        piece.type = newType;
-        try {
-          //let oldShape = piece.entity.getComponent(Shape); // Doesn't work currently, hence piece.shape
-          let oldShape = piece.shape;
-          piece.entity.removeComponent(oldShape);
-          let pieceType = this.pieceTypes[piece.type - 1];
-          piece.shape = pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)];
-          piece.entity.addComponent(piece.shape);
-        }
-        catch(e) {
-          log('Failed to find shape for piece at ' + piece.x + ', ' + piece.y + ': ' + e);
-        }
-        */
+        piece.type = -1;
+        piece.entity.addComponentOrReplace(this.donePieceShapes[Math.floor(Math.random() * this.donePieceShapes.length)]);
       }
     }
     

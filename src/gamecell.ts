@@ -9,13 +9,11 @@
 export default class GameCell {
   public type: number;
   public del: boolean;
-  public delTimer: number;
   public cleared: boolean;
   
   constructor(type: number) {
     this.type = type;
     this.del = false;
-    this.delTimer = 0;
     this.cleared = false;
   }
 }

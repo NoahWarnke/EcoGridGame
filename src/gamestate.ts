@@ -21,6 +21,11 @@ export default class GameState {
   private numTypes: number;
   
   /**
+   * This keeps track of how many of each type remain on the board. Used for preventing that number being 0<x<4.
+   */
+  private numOfEachType: number[];
+  
+  /**
    * This is the number of moves you've performed.
    */
   private numMoves = 0;
@@ -35,12 +40,20 @@ export default class GameState {
    * @param numTypes how many types of object there are in the grid.
    * @param gridLayout a layout
    */
-  constructor(numTypes: number, gridLayout: number[][]) {
-    this.nx = gridLayout.length;
-    this.ny = gridLayout[0].length;
+  constructor(numTypes: number, width: number, height: number) {
+    
     this.numTypes = numTypes;
+    this.nx = width;
+    this.ny = height;
+    
+    
+    this.numOfEachType = [];
+    for(let i = 1; i <= this.numTypes; i++) {
+      this.numOfEachType[i] = 0;
+    }
     
     // Set up our grid.
+    let gridLayout = this.createGridLayout();
     this.setGridToGridLayout(gridLayout);
   }
   
@@ -57,36 +70,67 @@ export default class GameState {
   }
   
   /**
-   * Generate a random grid layout of the given dimensions.
+   * Generate a random grid layout for this GameState.
    */
-  public static generateRandomGridLayout(nx: number, ny: number, numTypes: number): number[][] {
+  public createGridLayout(): number[][] {
     
-    let gridLayout: number[][] = [];
-    
-    // Generate random objects in grid.
-    for (var x = 0; x < nx; x++) {
-      gridLayout[x] = [];
-      for (var y = 0; y < ny; y++) {
-        gridLayout[x].push(Math.floor(Math.random() * numTypes) + 1)
-      }
+    // Quick validation that a valid game state is possible.
+    if (this.numTypes * 4 > this.nx * this.ny - 1) {
+      throw new Error("Impossible to fit at least 4 of each type on the board!");
     }
     
-    // Generate the hole.
-    gridLayout[Math.floor(Math.random() * nx)][Math.floor(Math.random() * ny)] = 0;
+    let gridLayout: number[][];
+    let gridSlots: number[][];
+    
+    
+    let squareExists;
+    do {
+      gridLayout = [];
+      gridSlots = [];
+      
+      // Generate grid.
+      for (let x = 0; x < this.nx; x++) {
+        gridLayout[x] = [];
+        for (let y = 0; y < this.ny; y++) {
+          gridLayout[x][y] = 0;
+          gridSlots.push([x, y]);
+        }
+      }
+      
+      // Generate random objects in grid.
+      // Want there to be an almost-equal (off by at most 1) number of each type, randomly scattered.
+      // Note we're leaving one slot at 0, which is the hole.
+      // Also, repeat the generation process until we get a grid with no squares.
+      let type = 0;
+      for (let i = 0; i < this.nx * this.ny - 1; i++) { // -1 leaves the hole.
+        let randomIndex = Math.floor(Math.random() * gridSlots.length);
+        let [x, y] = gridSlots[randomIndex];
+        
+        gridLayout[x][y] = type + 1;
+        gridSlots.splice(randomIndex, 1); // remove from gridSlots.
+        type = (type + 1) % this.numTypes;
+      }
+      
+      // Verify we don't have any 2x2 squares already.
+      squareExists = false;
+      for (let x = 0; x < this.nx - 1 && !squareExists; x++) {
+        for (let y = 0; y < this.ny - 1 && !squareExists; y++) {
+            
+          let squareType = gridLayout[x][y];
+          if (
+            squareType !== -1 && // If it's of the done type, can't make squares out of it.
+            gridLayout[x + 1][y    ] === squareType &&
+            gridLayout[x    ][y + 1] === squareType &&
+            gridLayout[x + 1][y + 1] === squareType
+          ) {
+            squareExists = true;
+          }
+        }
+      }
+    } while (squareExists);
+    
     
     return gridLayout;
-  }
-  
-  /**
-   * Generate a non-random grid layout with 4x4 dimensions.
-   */
-  public static getHardcoded4x4GridLayout(): number[][] {
-    return [
-      [2, 1, 3, 2],
-      [3, 3, 1, 2],
-      [3, 0, 3, 2],
-      [1, 3, 3, 2]
-    ];
   }
   
   /**
@@ -97,10 +141,24 @@ export default class GameState {
     this.grid = [];
     
     // Each cell of the grid has a type, a del value (it's marked for deletion), and a cleared value (already deleted an object on it once.)
-    for (var x = 0; x < this.nx; x++) {
+    for (let x = 0; x < this.nx; x++) {
       this.grid[x] = [];
-      for (var y = 0; y < this.ny; y++) {
-        this.grid[x].push(new GameCell(gridLayout[x][y]));
+      for (let y = 0; y < this.ny; y++) {
+        let type: number = gridLayout[x][y];
+        this.grid[x].push(new GameCell(type));
+        if (type !== 0) {
+          this.numOfEachType[type]++; // keep track of counts.
+        }
+      }
+    }
+    
+    // Quick validation that there are enough of each type.
+    for (let i = 1; i <= this.numTypes; i++) {
+      if (this.numOfEachType[i] < 4) {
+        throw new Error("Insufficient number of pieces of type " + i);
+      }
+      else {
+        log('type ' + i + ' has ' + this.numOfEachType[i] + ' pieces.');
       }
     }
   }
@@ -170,7 +228,7 @@ export default class GameState {
    * Check the grid for a 2x2 square of same-type objects that may have been generated from a swap into a given coordinate.
    * @returns A tuple containing the square's lower left corner plus the type of the square, or -1, -1 if none found. Greedy, so returns first such square found.
    */
-  public checkForSquareOfSameType(swapX: number, swapY: number): [number, number, number] {
+  public checkForSquareOfSameTypeAroundPoint(swapX: number, swapY: number): [number, number, number] {
     
     // Only need to look at the up-to 4 2x2 squares that include swapX, swapY, since that's the only thing that changed.
     for (let x = Math.max(0, swapX - 1); x < Math.min(this.nx - 1, swapX + 1); x++) {
@@ -178,15 +236,9 @@ export default class GameState {
         log ('checking ' + x + ', ' + y);
         
         // Check all four cells in this have the same type.
-        let squareType = this.grid[x][y].type;
-        if (
-          squareType !== this.numTypes && // If it's of the done type, can't make squares out of it.
-          this.grid[x + 1][y    ].type === squareType &&
-          this.grid[x    ][y + 1].type === squareType &&
-          this.grid[x + 1][y + 1].type === squareType
-        ) {
-          log('Success! Found square at ' + x + ', ' + y);
-          return [x, y, squareType];
+        let type = this.checkForSquareOfSameType(x, y);
+        if (type !== -1) {
+          return [x, y, type];
         }
       }
     }
@@ -195,29 +247,49 @@ export default class GameState {
     return [-1, -1, -1];
   }
   
+  /**
+   * Check for a 2x2 square of the same type with the lower left corner at the given coords.
+   * @returns the type, if squre present, or -1 if no square.
+   */
+  public checkForSquareOfSameType(x: number, y: number): number {
+    let squareType = this.grid[x][y].type;
+    if (
+      squareType !== -1 && // If it's of the done type, can't make squares out of it.
+      this.grid[x + 1][y    ].type === squareType &&
+      this.grid[x    ][y + 1].type === squareType &&
+      this.grid[x + 1][y + 1].type === squareType
+    ) {
+      return squareType;
+    }
+    return -1;
+  }
+  
+  /**
+   * For a square with the given corners, mark the four elements for deletion.
+   */
   public markSquareForDeletion(cornerX: number, cornerY: number) {
     
     // Simply go through the 4 square cells and mark for deletion!
     for (let squareX = 0; squareX < 2; squareX++) {
       for (let squareY = 0; squareY < 2; squareY++) {
         this.grid[cornerX + squareX][cornerY + squareY].del = true;
-        this.grid[cornerX + squareX][cornerY + squareY].delTimer = 0;
         this.grid[cornerX + squareX][cornerY + squareY].cleared = true;
       }
     }
   }
   
+  /**
+   * For a given type and given that a square of that type has already had its cells marked for deletion, mark all other connected cells of same type for deletion.
+   */
   public markConnectedForDeletion(squareType: number) {
     
     // Now proceed to find the other adjacent same-type objects.
     // We'll just iterate, each time checking the whole grid, until we don't find any other adjacent same-type objects.
     
     let again = true; // Indicates we need to do another iteration because new cells were marked the last round.
-    let distance = 0; // How many iterations we've done, aka how far the deleted cells have spread.
     
     while (again) {
       again = false;
-      distance++;
       for (let x = 0; x < this.nx; x++) {
         for (let y = 0; y < this.ny; y++) {
           if (!this.grid[x][y].del && this.grid[x][y].type === squareType) {
@@ -230,7 +302,6 @@ export default class GameState {
               || y < this.ny - 1 && this.grid[x][y + 1].del
             ) {
               this.grid[x][y].del = true;
-              this.grid[x][y].delTimer = distance;
               if (!this.grid[x][y].cleared) {
                 this.grid[x][y].cleared = true;
               }
@@ -246,25 +317,48 @@ export default class GameState {
    * Delete all cells marked for deletion and replace with new random(?) values.
    */
   public deleteAndReplace() {
+    
+    // Count how many will remain of the deleted type.
+    
+    let markedForDeletion: GameCell[] = [];
     for (let x = 0; x < this.nx; x++) {
       for (let y = 0; y < this.ny; y++) {
-        let cell = this.grid[x][y];
-        if (cell.del) {
-          cell.del = false;
-          cell.delTimer = 0;
-          
-          // Put in new cell values until one doesn't make a new 2x2 square.
-          /*
-          let cornerX: number = undefined;
-          do {
-            cell.type = Math.floor(Math.random() * this.numTypes) + 1;
-            [cornerX, ] = this.checkForSquareOfSameType(x, y);
-          } while (cornerX !== -1);
-          */
-          cell.type = this.numTypes; // The type for pieces that are 'done' (aka, trash picked up, so now nature.)
+        if (this.grid[x][y].del) {
+          markedForDeletion.push(this.grid[x][y]);
         }
       }
     }
+    
+    // Make sure we're actually deleting.
+    if (markedForDeletion.length === 0) {
+      return;
+    }
+    
+    let typeBeingDeleted = markedForDeletion[0].type;
+    log('current number of type ' + typeBeingDeleted + ': ' + this.numOfEachType[typeBeingDeleted]);
+    
+    log('Markedfordeletion length ' + markedForDeletion.length)
+    
+    // Calculate how many of this type of piece need to not be turned into the done piece, in order to have either 0 or at least 4 pieces left.
+    // Invariant: before the deletion, there were at least 4 of that piece, and at least 4 of that piece are being deleted.
+    let numLeft = this.numOfEachType[typeBeingDeleted] - markedForDeletion.length;
+    log('Number of type ' + markedForDeletion[0].type + ' that would be remaining after this: ' + numLeft);
+    let numKept = 0;
+    if (numLeft > 0 && numLeft < 4) {
+      numKept = 4 - numLeft;
+      
+      // Randomly 'save from deletion' the correct number.
+      for (var i = 0; i < numKept; i++) {
+        markedForDeletion.splice(Math.floor(Math.random() * markedForDeletion.length), 1);
+      }
+    }
+    
+    // Finally swap types for all the ones still marked for deletion to -1, aka the done piece.
+    for (let cell of markedForDeletion) {
+      cell.del = false;
+      cell.type = -1;
+    }
+    this.numOfEachType[typeBeingDeleted] -= markedForDeletion.length;
   }
   
   /**
@@ -272,58 +366,5 @@ export default class GameState {
    */
   public incrementMoves() {
     this.numMoves++;
-  }
-  
-  /**
-   * Handle a click on the given cell.
-   @returns false if no change to state, true otherwise.
-   */
-  public click(clickX: number, clickY: number) {
-    // NOTE, not using this function, because the game scene needs to know what happens at click at a more granular level.
-    
-    // Increment the number of moves.
-    this.incrementMoves();
-    
-    // See if a swap is valid.
-    let [swapX, swapY] = this.getSwapCoordsFromClick(clickX, clickY);
-    if (swapX === clickX && swapY === clickY) {
-      log('Cannot swap there!');
-      return false;
-    }
-    
-    // Do the swap.
-    if (!this.performSwap(clickX, clickY, swapX, swapY)) {
-      log('Swap failed (should not though)...');
-      return false;
-    }
-    
-    // See if we have a 2x2 square generated from the swap.
-    let [cornerX, cornerY, squareType] = this.checkForSquareOfSameType(swapX, swapY);
-    if (cornerX === -1 || cornerY === -1) {
-      log('No new 2x2.');
-      return true;
-    }
-    
-    // Mark the square, and any connected same-type objects, for deletion.
-    this.markSquareForDeletion(cornerX, cornerY);
-    this.markConnectedForDeletion(squareType);
-    
-    // Do the deletion and replace with new things.
-    this.deleteAndReplace();
-    
-    return true;
-  }
-  
-  /**
-   * Quickly render grid to log.
-   */
-  public showGrid() {
-    for (let y = 0; y < this.ny; y++) {
-      let line = "";
-      for (let x = 0; x < this.nx; x++) {
-        line += this.grid[x][y].type + " ";
-      }
-      log(line);
-    }
   }
 }
