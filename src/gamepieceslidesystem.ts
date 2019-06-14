@@ -19,8 +19,11 @@ export default class GamePieceSlideSystem implements ISystem {
       
       // Update piece position.
       let pos = entity.getComponent(Transform).position;
-      pos.x = (piece.slideTargetX - piece.x) * piece.slideAlpha + piece.x;
-      pos.z = (piece.slideTargetY - piece.y) * piece.slideAlpha + piece.y; // DCL is dumb and y is up, not z.
+      pos.set(
+        (piece.slideTargetX - piece.x) * piece.slideAlpha + piece.x,
+        pos.y,
+        (piece.slideTargetY - piece.y) * piece.slideAlpha + piece.y // DCL is dumb and y is up, not z.
+      );
       
       // Check for the end of the slide, and resolve it if so.
       if (piece.slideAlpha === 1) {

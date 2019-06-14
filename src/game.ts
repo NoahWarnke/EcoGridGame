@@ -13,10 +13,12 @@ engine.addSystem(new GamePieceDeleteSystem());
 let cyl = new CylinderShape();
 cyl.radiusTop = 1.0; // So it's not a cone.
 cyl.arc = 0.5;
-let gameBoard = new GameBoard({
-  dimensions: {x: 4,y: 4},
+
+// 4x4 with just trash bag versus bottle.
+let gameBoardSmall = new GameBoard({
+  dimensions: {x: 4, y: 4},
   transform: new Transform({
-    position: new Vector3(8, 0, 8)
+    position: new Vector3(4, 0, 4)
   }),
   boardShape: new BoxShape(),
   pieceTypes: [
@@ -26,7 +28,7 @@ let gameBoard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(-3, 0, 0)
         }),
-        shapes: [new SphereShape()]
+        shapes: [new GLTFShape('models/bagtrash.gltf')]
     },
     // Recycling
     {
@@ -34,7 +36,65 @@ let gameBoard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(0, 0, 3)
         }),
-        shapes: [new BoxShape()]
+        shapes: [new GLTFShape('models/bottle.gltf')]
+    },
+  ],
+  // Nature
+  donePieceShapes: [cyl]
+});
+
+// 5x5 with two types of recycling and trash
+let gameBoardMedium = new GameBoard({
+  dimensions: {x: 5,y: 5},
+  transform: new Transform({
+    position: new Vector3(4, 0, 12)
+  }),
+  boardShape: new BoxShape(),
+  pieceTypes: [
+    // Landfill
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(-3, 0, 0)
+        }),
+        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')]
+    },
+    // Recycling
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(0, 0, 3)
+        }),
+        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf')]
+    }
+  ],
+  // Nature
+  donePieceShapes: [cyl]
+});
+
+// 6x6 with 2x trash, recycling, compost
+let gameBoardMedHard = new GameBoard({
+  dimensions: {x: 6, y: 6},
+  transform: new Transform({
+    position: new Vector3(16, 0, 12)
+  }),
+  boardShape: new BoxShape(),
+  pieceTypes: [
+    // Landfill
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(-3, 0, 0)
+        }),
+        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')]
+    },
+    // Recycling
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(0, 0, 3)
+        }),
+        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf')]
     },
     // Compost
     {
@@ -42,7 +102,44 @@ let gameBoard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(3, 0, 0)
         }),
-        shapes: [new ConeShape()]
+        shapes: [new ConeShape(), new BoxShape()]
+    }
+  ],
+  // Nature
+  donePieceShapes: [cyl]
+});
+
+// 8x8 with 3x(eventually) trash, recycling, Compost
+let gameBoardHard = new GameBoard({
+  dimensions: {x: 6,y: 6},
+  transform: new Transform({
+    position: new Vector3(16, 0, 4)
+  }),
+  boardShape: new BoxShape(),
+  pieceTypes: [
+    // Landfill
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(-3, 0, 0)
+        }),
+        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')] // plus coffee when it works
+    },
+    // Recycling
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(0, 0, 3)
+        }),
+        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf'), new GLTFShape('models/water.gltf')]
+    },
+    // Compost
+    {
+        receptacleShape: new CylinderShape(),
+        receptacleTransform: new Transform({
+          position: new Vector3(3, 0, 0)
+        }),
+        shapes: [new ConeShape(), new BoxShape(), cyl]
     }
   ],
   // Nature

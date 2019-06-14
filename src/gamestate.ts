@@ -140,7 +140,6 @@ export default class GameState {
     
     this.grid = [];
     
-    // Each cell of the grid has a type, a del value (it's marked for deletion), and a cleared value (already deleted an object on it once.)
     for (let x = 0; x < this.nx; x++) {
       this.grid[x] = [];
       for (let y = 0; y < this.ny; y++) {
@@ -268,12 +267,12 @@ export default class GameState {
    * For a square with the given corners, mark the four elements for deletion.
    */
   public markSquareForDeletion(cornerX: number, cornerY: number) {
-    
+    log('Marking square for deletion...');
     // Simply go through the 4 square cells and mark for deletion!
-    for (let squareX = 0; squareX < 2; squareX++) {
-      for (let squareY = 0; squareY < 2; squareY++) {
-        this.grid[cornerX + squareX][cornerY + squareY].del = true;
-        this.grid[cornerX + squareX][cornerY + squareY].cleared = true;
+    for (let x = cornerX; x < cornerX + 2; x++) {
+      for (let y = cornerY; y < cornerY + 2; y++) {
+        log(x + ', ' + y);
+        this.grid[x][y].del = true;
       }
     }
   }
@@ -282,7 +281,7 @@ export default class GameState {
    * For a given type and given that a square of that type has already had its cells marked for deletion, mark all other connected cells of same type for deletion.
    */
   public markConnectedForDeletion(squareType: number) {
-    
+    log('marking connected, given type ' + squareType);
     // Now proceed to find the other adjacent same-type objects.
     // We'll just iterate, each time checking the whole grid, until we don't find any other adjacent same-type objects.
     
@@ -292,7 +291,7 @@ export default class GameState {
       again = false;
       for (let x = 0; x < this.nx; x++) {
         for (let y = 0; y < this.ny; y++) {
-          if (!this.grid[x][y].del && this.grid[x][y].type === squareType) {
+          if (this.grid[x][y].type === squareType && !this.grid[x][y].del) {
             
             // Check the four adjacent ones, like earlier - if one of them is scheduled for deletion, this one should be too!
             if (
@@ -301,10 +300,8 @@ export default class GameState {
               || y > 0 && this.grid[x][y - 1].del
               || y < this.ny - 1 && this.grid[x][y + 1].del
             ) {
+              log('mark ' + x + ', ' + y);
               this.grid[x][y].del = true;
-              if (!this.grid[x][y].cleared) {
-                this.grid[x][y].cleared = true;
-              }
               again = true;
             }
           }
@@ -325,6 +322,9 @@ export default class GameState {
       for (let y = 0; y < this.ny; y++) {
         if (this.grid[x][y].del) {
           markedForDeletion.push(this.grid[x][y]);
+          this.grid[x][y].del = false; 
+          log(x + ", " + y);
+          log(this.grid[x][y]);
         }
       }
     }
@@ -337,7 +337,11 @@ export default class GameState {
     let typeBeingDeleted = markedForDeletion[0].type;
     log('current number of type ' + typeBeingDeleted + ': ' + this.numOfEachType[typeBeingDeleted]);
     
-    log('Markedfordeletion length ' + markedForDeletion.length)
+    log('Markedfordeletion length ' + markedForDeletion.length);
+    
+    if (markedForDeletion.length > this.numOfEachType[typeBeingDeleted]) {
+      log('Error!!!');
+    }
     
     // Calculate how many of this type of piece need to not be turned into the done piece, in order to have either 0 or at least 4 pieces left.
     // Invariant: before the deletion, there were at least 4 of that piece, and at least 4 of that piece are being deleted.
@@ -355,7 +359,6 @@ export default class GameState {
     
     // Finally swap types for all the ones still marked for deletion to -1, aka the done piece.
     for (let cell of markedForDeletion) {
-      cell.del = false;
       cell.type = -1;
     }
     this.numOfEachType[typeBeingDeleted] -= markedForDeletion.length;
