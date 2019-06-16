@@ -144,31 +144,54 @@ export default class GameBoard {
     
     log('Slides done!');
     
-    /*
-    // See if we have a 2x2 square generated from the swap.
-    let [cornerX, cornerY, squareType] = this.gameState.checkForSquareOfSameTypeAroundPoint(swapX, swapY);
-    if (cornerX === -1 || cornerY === -1) {
+    // See if we have any 2x2 squares generated from the slide.
+    let squares: [number, number, number][] = this.gameState.checkWholeGridForSquaresOfSameType();
+    if (squares.length === 0) {
       this.animating = false;
-      log ('No square found.');
+      log('No squares found.');
       return;
     }
     
-    // Mark the square, and any connected same-type objects, for deletion.
-    this.gameState.markSquareForDeletion(cornerX, cornerY);
-    this.gameState.markConnectedForDeletion(squareType);
-    
-    let blinkPromises = [];
-    for (let piece of this.gamePieces) {
-      if (this.gameState.getCellAt(piece.x, piece.y).del) {
-        blinkPromises.push(piece.showDeletion());
+    // Mark all squares for deletion, and get a list of square types found.
+    let types: number[] = [];
+    for (let [x, y, type] of squares) {
+      this.gameState.markSquareForDeletion(x, y);
+      if (types.indexOf(type) === -1) {
+        types.push(type);
       }
     }
-    log ('Blinking ' + blinkPromises.length);
-    await Promise.all(blinkPromises);
     
-    log ('Blinking done.');
+    // For each type, mark connected pieces for deletion.
+    for (let type of types) {
+      this.gameState.markConnectedForDeletion(type);
+    }
     
-    // Do the deletion and replace with new things.
+    // For each type, get a list of the pieces that will be deleted.
+    let deletedPiecesByType: {[index: number]: GamePiece[]} = {};
+    for (let type of types) {
+      deletedPiecesByType[type] = [];
+      for (let piece of this.gamePieces) {
+        let cell = this.gameState.getCellAt(piece.x, piece.y);
+        if (cell.del && cell.type === type) {
+          deletedPiecesByType[type].push(piece);
+        }
+      }
+    }
+    
+    // For each type, blink the deleted pices (TODO replace with drone sucking and dumping into bins)).
+    for (let type of types) {
+      let blinkPromises = [];
+      for (let piece of deletedPiecesByType[type]) {
+        blinkPromises.push(piece.showDeletion());
+      }
+      
+      log ('Blinking ' + blinkPromises.length + ' of type ' + type);
+      await Promise.all(blinkPromises);
+      
+      log ('Blinking done.');
+    }
+    
+    // Delete all pieces of all types that are marked for deletion, and replace with done types.
     this.gameState.deleteAndReplace();
     
     // Update pieces with new done types.
@@ -176,9 +199,6 @@ export default class GameBoard {
       
       // Grab new cell type, and if it's -1 but the piece's type isn't -1, we know we have a swap to do!
       if (piece.type !== -1 && this.gameState.getCellAt(piece.x, piece.y).type === -1) {
-        
-        log('Piece is done!');
-        
         piece.type = -1;
         piece.entity.addComponentOrReplace(this.donePieceShapes[Math.floor(Math.random() * this.donePieceShapes.length)]);
       }
@@ -186,7 +206,6 @@ export default class GameBoard {
     
     // Unlock game state now that animations and updates are done.
     this.animating = false;
-    */
   }
 
   public placeEnvironmentObjects() {
