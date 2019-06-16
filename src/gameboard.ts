@@ -49,15 +49,6 @@ export default class GameBoard {
         -(this.gameState.getHeight() - 1) / 2)
     }));
     
-    // Board entity is a box that the pieces sit on. Doesn't need to be a box, or to exist at all, really.
-    let board = new Entity();
-    board.setParent(this.gameGroup);
-    board.addComponent(new BoxShape());
-    let black = new Material();
-    black.albedoColor = Color3.Black();
-    board.addComponent(black);
-    board.addComponent(new Transform({scale: new Vector3(this.gameState.getWidth() + 0.5, 0.5, this.gameState.getHeight() + 0.5)}));
-    
     this.gamePieces = [];
     this.createPieceEntities();
     
@@ -121,27 +112,39 @@ export default class GameBoard {
     // Increment the number of moves.
     this.gameState.incrementMoves();
     
-    // See if a swap is valid.
-    let [swapX, swapY] = this.gameState.getSwapCoordsFromClick(piece.x, piece.y);
-    if (swapX === piece.x && swapY === piece.y) {
+    // See if a slide is valid.
+    let slidePairs = this.gameState.getSlidePairsFromClick(piece.x, piece.y);
+    if (slidePairs.length === 0) {
       log('Cannot swap there!'); // TODO buzz noise
       return;
     }
     
-    // Update GameState.
-    if (!this.gameState.performSwap(piece.x, piece.y, swapX, swapY)) {
-      log('Swap failed (should never happen)...');
-      return;
-    }
+    // Perform slide.
+    this.gameState.performSlide(slidePairs);
     
     // Lock game until animations are done.
     this.animating = true;
     
-    // Slide the piece to its new spot.
-    await piece.slide(swapX, swapY);
+    // Slide the pieces to their new spots.
+    let slides = [];
     
-    log('Slide done.');
+    for (let [x, y, newX, newY] of slidePairs) {
+      for (let i = 0; i < this.gamePieces.length; i++) {
+        let piece = this.gamePieces[i];
+        if (piece.x === x && piece.y === y) {
+          log ('sliding ' + x + ', ' + y + ' to ' + newX + ', ' + newY);
+          slides.push(piece.slide(newX, newY));
+          break;
+        }
+      }
+    }
+    await Promise.all(slides);
     
+    this.animating = false;
+    
+    log('Slides done!');
+    
+    /*
     // See if we have a 2x2 square generated from the swap.
     let [cornerX, cornerY, squareType] = this.gameState.checkForSquareOfSameTypeAroundPoint(swapX, swapY);
     if (cornerX === -1 || cornerY === -1) {
@@ -183,6 +186,7 @@ export default class GameBoard {
     
     // Unlock game state now that animations and updates are done.
     this.animating = false;
+    */
   }
 
   public placeEnvironmentObjects() {

@@ -163,12 +163,79 @@ export default class GameState {
   }
   
   /**
+   * Determine if we're able to slide a line of pieces towards the hole from the clicked position clickX, clickY.
+   * @returns an array of sets of four numbers: the x and y of a piece that can slide, and the x and y of the adjacent slot it slides into. Importantly, in order from the hole back to the clic.
+   */
+  public getSlidePairsFromClick(clickX: number, clickY: number): [number, number, number, number][] {
+    let holeX = -1;
+    let holeY = -1;
+    for (let x = 0; x < this.nx && holeX === -1; x++) {
+      if (this.grid[x][clickY].type === 0) {
+        holeX = x;
+        holeY = clickY;
+      }
+    }
+    for (let y = 0; y < this.ny && holeY === -1; y++) {
+      if (this.grid[clickX][y].type === 0) {
+        holeX = clickX;
+        holeY = y;
+      }
+    }
+    
+    // Return if no hole found in the same row or column as the click, or if you somehow clicked on the hole (should be impossible).
+    if (holeX === -1 || holeY === -1 || (holeX === clickX && holeY === clickY)) {
+      return [];
+    }
+    
+    // Let's get our set of pieces that will be slid, plus their new positions.
+    let result = [];
+    if (holeY === clickY) {
+      if (clickX < holeX) {
+        for (let x = holeX - 1; x >= clickX; x--) {
+          result.push([x, clickY, x + 1, clickY]);
+        }
+      }
+      else {
+        for (let x = holeX + 1; x <= clickX; x++) {
+          result.push([x, clickY, x - 1, clickY]);
+        }
+      }
+    }
+    else {
+      if (clickY < holeY) {
+        for (let y = holeY - 1; y >= clickY; y--) {
+          result.push([clickX, y, clickX, y + 1]);
+        }
+      }
+      else {
+        for (let y = holeY + 1; y <= clickY; y++) {
+          result.push([clickX, y, clickX, y - 1]);
+        }
+      }
+    }
+    
+    return result;
+  }
+  
+  /**
+   * Slide a set of pieces from old to (theoretically adjacent) new spots.
+   * Depends on the input list going backwards along the slide direction.
+   */
+  public performSlide(pieceSlides: [number, number, number, number][]) {
+    for (let [x, y, newX, newY] of pieceSlides) {
+      this.grid[newX][newY].type = this.grid[x][y].type;
+      this.grid[x][y].type = 0;
+    }
+  }
+  
+  /**
    * Get coordinates of empty cell you can swap an object at the given clickX and clickY to.
    * Returns the click coordinates if the swap is impossible.
    * @param clickX The x coordinate of the click.
    * @param clickY the y coordinate of the click.
    * @returns A tuple containing the x and y coordinates you can swap to, or just clickX, clickY if you can't.
    */
+   /*
   public getSwapCoordsFromClick(clickX: number, clickY: number): [number, number] {
     
     let swapX = clickX, swapY = clickY;
@@ -192,12 +259,14 @@ export default class GameState {
     
     return [swapX, swapY];
   }
+  */
   
   /**
    * Perform a swap between the cell at (clickX, clickY) and the cell at (swapX, swapY).
    * Does nothing if not adjacent, on the grid, etc.
    * @returns true if swap successful.
    */
+   /*
   public performSwap(clickX: number, clickY: number, swapX: number, swapY: number) {
     
     // Sanity check to make sure swap is adjacent.
@@ -222,11 +291,13 @@ export default class GameState {
     
     return true;
   }
+  */
   
   /**
    * Check the grid for a 2x2 square of same-type objects that may have been generated from a swap into a given coordinate.
    * @returns A tuple containing the square's lower left corner plus the type of the square, or -1, -1 if none found. Greedy, so returns first such square found.
    */
+   /*
   public checkForSquareOfSameTypeAroundPoint(swapX: number, swapY: number): [number, number, number] {
     
     // Only need to look at the up-to 4 2x2 squares that include swapX, swapY, since that's the only thing that changed.
@@ -245,6 +316,9 @@ export default class GameState {
     // Failed to find a square.
     return [-1, -1, -1];
   }
+  */
+  
+
   
   /**
    * Check for a 2x2 square of the same type with the lower left corner at the given coords.
@@ -261,6 +335,23 @@ export default class GameState {
       return squareType;
     }
     return -1;
+  }
+  
+  /**
+   * Check the whole grid for 2x2 squares of the same type.
+   * @returns a list of tuples containing the x and y coords of each square, and the type of the square.
+   */
+  public checkWholeGridForSquaresOfSameType(): [number, number, number][] {
+    let result = [];
+    for (let x = 0; x < this.nx; x++) {
+      for (let y = 0; y < this.ny; y++) {
+        let type = this.checkForSquareOfSameType(x, y);
+        if (type !== -1) {
+          result.push([x, y, type]);
+        }
+      }
+    }
+    return result;
   }
   
   /**
@@ -310,6 +401,8 @@ export default class GameState {
     }
   }
   
+  
+  
   /**
    * Delete all cells marked for deletion and replace with new random(?) values.
    */
@@ -322,7 +415,7 @@ export default class GameState {
       for (let y = 0; y < this.ny; y++) {
         if (this.grid[x][y].del) {
           markedForDeletion.push(this.grid[x][y]);
-          this.grid[x][y].del = false; 
+          this.grid[x][y].del = false;
           log(x + ", " + y);
           log(this.grid[x][y]);
         }
