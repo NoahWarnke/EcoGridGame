@@ -44,7 +44,7 @@ export default class GamePiece {
    * Start the piece sliding to a new position.
    * @returns a Promise that resolves when the slide finishes.
    */
-  slide(slideX: number, slideY: number) {
+  slide(slideX: number, slideY: number): Promise<void> {
     this.sliding = true;
     this.slideAlpha = 0;
     this.slideTargetX = slideX;
@@ -66,7 +66,7 @@ export default class GamePiece {
    * Start the deletion animation.
    * @returns a Promise that resolves when the slide finishes.
    */
-  showDeletion() {
+  showDeletion(): Promise<void> {
     this.deleting = true;
     
     return new Promise((resolve, reject) => {

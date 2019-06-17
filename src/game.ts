@@ -2,12 +2,14 @@ import GameState from 'gamestate';
 import GamePiece from 'gamepiece';
 import GamePieceSlideSystem from 'gamepieceslidesystem';
 import GamePieceDeleteSystem from 'gamepiecedeletesystem';
+import {DroneSystem} from 'dronesystem';
 import GameBoard from 'gameboard';
 import DroneHangar from 'dronehangar';
 
 // Add our systems for animation.
 engine.addSystem(new GamePieceSlideSystem());
 engine.addSystem(new GamePieceDeleteSystem());
+engine.addSystem(new DroneSystem());
 
 // Instantiate a new game board.
 let cyl = new CylinderShape();
@@ -15,6 +17,7 @@ cyl.radiusTop = 1.0; // So it's not a cone.
 cyl.arc = 0.5;
 
 // 4x4 with just trash bag versus bottle.
+/*
 let gameBoardSmall = new GameBoard({
   dimensions: {x: 4, y: 4},
   transform: new Transform({
@@ -145,5 +148,6 @@ let gameBoardHard = new GameBoard({
   // Nature
   donePieceShapes: [cyl]
 });
+*/
 
 let hangar = new DroneHangar(new Transform({position: new Vector3(24, 0, 8)}));

@@ -187,7 +187,6 @@ export default class GameBoard {
       
       log ('Blinking ' + blinkPromises.length + ' of type ' + type);
       await Promise.all(blinkPromises);
-      
       log ('Blinking done.');
     }
     
