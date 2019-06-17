@@ -209,23 +209,24 @@ export default class GameBoard {
   }
 
   public placeEnvironmentObjects() {
-
-    let penguin = new Entity();
-    penguin.addComponent(new Transform({
-      position: new Vector3(8, 8, 2),
-      scale: new Vector3(1, 1, 1)
-    }));
-    penguin.addComponent(new GLTFShape("models/shoe.glb"))
-    engine.addEntity(penguin);
-
-
-    let sealion = new Entity();
-    sealion.addComponent(new Transform({
-      position: new Vector3(5, 1, -2),
-      scale: new Vector3(0.5, 0.5, 0.5)
-    }));
-    sealion.addComponent(new GLTFShape("models/sealion.glb"))
-    engine.addEntity(sealion);
-
+    let models = {
+      bottle: "models/trash/bottle.gltf",
+      bag: "models/trash/bagtrash.gltf",
+      chips: "models/trash/chips03.gltf",
+      coffee: "models/trash/coffee.gltf",
+      water: "models/trash/water.gltf",
+      plate: "models/trash/plate.gltf",
+    };
+    let x = 5;
+    for (let modelsKey in models) {
+      x += 1;
+      let obj = new Entity();
+      obj.addComponent(new Transform({
+        position: new Vector3(x, 0.2, 8),
+        scale: new Vector3(1, 1, 1)
+      }));
+      obj.addComponent(new GLTFShape(models[modelsKey]));
+      engine.addEntity(obj);
+    }
   }
 }
