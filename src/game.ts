@@ -28,7 +28,7 @@ let gameBoardSmall = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(-3, 0, 0)
         }),
-        shapes: [new GLTFShape('models/bagtrash.gltf')]
+        shapes: [new GLTFShape('models/coffee.gltf')]
     },
     // Recycling
     {
@@ -57,7 +57,7 @@ let gameBoardMedium = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(-3, 0, 0)
         }),
-        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')]
+        shapes: [new GLTFShape('models/chips-orange.gltf'), new GLTFShape('models/chips-green.gltf')]
     },
     // Recycling
     {
@@ -65,7 +65,7 @@ let gameBoardMedium = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(0, 0, 3)
         }),
-        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf')]
+        shapes: [new GLTFShape('models/water.gltf'), new GLTFShape('models/plate.gltf')]
     }
   ],
   // Nature
@@ -86,7 +86,7 @@ let gameBoardMedHard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(-3, 0, 0)
         }),
-        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')]
+        shapes: [new GLTFShape('models/boxsugar.gltf'), new GLTFShape('models/coffee.gltf')]
     },
     // Recycling
     {
@@ -94,7 +94,7 @@ let gameBoardMedHard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(0, 0, 3)
         }),
-        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf')]
+        shapes: [new GLTFShape('models/lightbulb.gltf'), new GLTFShape('models/wine-green.gltf')]
     },
     // Compost
     {
@@ -102,7 +102,7 @@ let gameBoardMedHard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(3, 0, 0)
         }),
-        shapes: [new ConeShape(), new BoxShape()]
+        shapes: [new GLTFShape('models/cigarettes-on-the-ground.gltf'), new GLTFShape('models/banana.gltf')]
     }
   ],
   // Nature
@@ -123,7 +123,7 @@ let gameBoardHard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(-3, 0, 0)
         }),
-        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')] // plus coffee when it works
+        shapes: [new GLTFShape('models/boxsugar.gltf'), new GLTFShape('models/bagtrash.gltf'), new GLTFShape('models/coffee.gltf')]
     },
     // Recycling
     {
@@ -131,7 +131,7 @@ let gameBoardHard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(0, 0, 3)
         }),
-        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf'), new GLTFShape('models/water.gltf')]
+        shapes: [new GLTFShape('models/wine-green.gltf'), new GLTFShape('models/plate.gltf'), new GLTFShape('models/lightbulb.gltf')]
     },
     // Compost
     {
@@ -139,7 +139,7 @@ let gameBoardHard = new GameBoard({
         receptacleTransform: new Transform({
           position: new Vector3(3, 0, 0)
         }),
-        shapes: [new ConeShape(), new BoxShape(), cyl]
+        shapes: [new GLTFShape('models/cigarettes-on-the-ground.gltf'), new GLTFShape('models/chicken.gltf'), new GLTFShape('models/banana.gltf')]
     }
   ],
   // Nature

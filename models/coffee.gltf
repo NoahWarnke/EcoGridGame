@@ -10,7 +10,8 @@
             "nodes" : [
                 0,
                 1,
-                2
+                3,
+                4
             ]
         }
     ],
@@ -26,7 +27,7 @@
             "translation" : [
                 4.076245307922363,
                 5.903861999511719,
-                -1.0054539442062378
+                0.17671442031860352
             ]
         },
         {
@@ -38,41 +39,72 @@
                 0.7804827094078064
             ],
             "translation" : [
-                6.854588031768799,
-                6.041752338409424,
-                6.6753010749816895
+                7.358891487121582,
+                5.627910614013672,
+                6.925790786743164
             ]
         },
         {
             "mesh" : 0,
-            "name" : "Icosphere",
-            "rotation" : [
-                -0.04231662303209305,
-                0.014118234626948833,
-                -0.31009674072265625,
-                0.9496577978134155
-            ],
+            "name" : "Cylinder.001",
             "scale" : [
-                0.6035829186439514,
-                0.6035829186439514,
-                0.6035828590393066
+                1.0885100364685059,
+                0.057520072907209396,
+                1.0885100364685059
             ],
             "translation" : [
-                -0.05361813306808472,
-                0.5736034512519836,
-                0.005267784930765629
+                0,
+                1.7226296663284302,
+                0
+            ]
+        },
+        {
+            "children" : [
+                2
+            ],
+            "mesh" : 1,
+            "name" : "Cylinder",
+            "rotation" : [
+                -0.46554410457611084,
+                -0.11202308535575867,
+                0.4813266694545746,
+                0.7341962456703186
+            ],
+            "scale" : [
+                0.3668711185455322,
+                0.3668711483478546,
+                0.3668711185455322
+            ],
+            "translation" : [
+                0.21166928112506866,
+                0.23038087785243988,
+                -0.02464061975479126
+            ]
+        },
+        {
+            "name" : "Light.001",
+            "rotation" : [
+                0.16907575726509094,
+                0.7558803558349609,
+                -0.27217137813568115,
+                0.570947527885437
+            ],
+            "translation" : [
+                -8.782726287841797,
+                3.4712612628936768,
+                5.206598281860352
             ]
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "Material.001",
+            "name" : "Material.002",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0,
-                    0,
-                    0,
+                    0.0908379852771759,
+                    0.05492749810218811,
+                    0.032526783645153046,
                     1
                 ],
                 "metallicFactor" : 0,
@@ -81,22 +113,22 @@
         },
         {
             "doubleSided" : true,
-            "name" : "Material.002",
+            "name" : "Material",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929,
+                    0.8970927596092224,
+                    0.8183081150054932,
+                    0.6669002175331116,
                     1
                 ],
                 "metallicFactor" : 0,
-                "roughnessFactor" : 0.5
+                "roughnessFactor" : 0.4000000059604645
             }
         }
     ],
     "meshes" : [
         {
-            "name" : "Icosphere",
+            "name" : "Cylinder.001",
             "primitives" : [
                 {
                     "attributes" : {
@@ -106,7 +138,12 @@
                     },
                     "indices" : 3,
                     "material" : 0
-                },
+                }
+            ]
+        },
+        {
+            "name" : "Cylinder",
+            "primitives" : [
                 {
                     "attributes" : {
                         "POSITION" : 4,
@@ -123,118 +160,118 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 320,
+            "count" : 480,
             "max" : [
-                1.0690029859542847,
-                1.5154151916503906,
-                0.9999999403953552
+                1,
+                5.175754070281982,
+                1
             ],
             "min" : [
-                -0.9870226383209229,
-                -1.1011381149291992,
-                -1.0038056373596191
+                -1,
+                -1,
+                -1
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 320,
+            "count" : 480,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 320,
+            "count" : 480,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 360,
+            "count" : 828,
             "type" : "SCALAR"
         },
         {
             "bufferView" : 4,
             "componentType" : 5126,
-            "count" : 60,
+            "count" : 200,
             "max" : [
-                -0.23202423751354218,
-                1.3810689449310303,
-                0.05185948312282562
+                1,
+                1.7105681896209717,
+                1
             ],
             "min" : [
-                -0.6065558195114136,
-                1.2506287097930908,
-                -0.2429206371307373
+                -1,
+                -1,
+                -1
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 5,
             "componentType" : 5126,
-            "count" : 60,
+            "count" : 200,
             "type" : "VEC3"
         },
         {
             "bufferView" : 6,
             "componentType" : 5126,
-            "count" : 60,
+            "count" : 200,
             "type" : "VEC2"
         },
         {
             "bufferView" : 7,
             "componentType" : 5123,
-            "count" : 90,
+            "count" : 372,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 3840,
+            "byteLength" : 5760,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
+            "byteLength" : 5760,
+            "byteOffset" : 5760
+        },
+        {
+            "buffer" : 0,
             "byteLength" : 3840,
-            "byteOffset" : 3840
+            "byteOffset" : 11520
         },
         {
             "buffer" : 0,
-            "byteLength" : 2560,
-            "byteOffset" : 7680
+            "byteLength" : 1656,
+            "byteOffset" : 15360
         },
         {
             "buffer" : 0,
-            "byteLength" : 720,
-            "byteOffset" : 10240
+            "byteLength" : 2400,
+            "byteOffset" : 17016
         },
         {
             "buffer" : 0,
-            "byteLength" : 720,
-            "byteOffset" : 10960
+            "byteLength" : 2400,
+            "byteOffset" : 19416
         },
         {
             "buffer" : 0,
-            "byteLength" : 720,
-            "byteOffset" : 11680
+            "byteLength" : 1600,
+            "byteOffset" : 21816
         },
         {
             "buffer" : 0,
-            "byteLength" : 480,
-            "byteOffset" : 12400
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 180,
-            "byteOffset" : 12880
+            "byteLength" : 744,
+            "byteOffset" : 23416
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 13060,
-            "uri" : "bagtrash.bin"
+            "byteLength" : 24160,
+            "uri" : "coffee.bin"
         }
     ]
 }

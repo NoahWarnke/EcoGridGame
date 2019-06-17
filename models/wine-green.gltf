@@ -10,7 +10,8 @@
             "nodes" : [
                 0,
                 1,
-                2
+                3,
+                4
             ]
         }
     ],
@@ -38,65 +39,99 @@
                 0.7804827094078064
             ],
             "translation" : [
-                6.854588031768799,
-                6.041752338409424,
-                6.6753010749816895
+                14.244029998779297,
+                13.910992622375488,
+                13.146112442016602
             ]
         },
         {
             "mesh" : 0,
-            "name" : "Icosphere",
-            "rotation" : [
-                -0.04231662303209305,
-                0.014118234626948833,
-                -0.31009674072265625,
-                0.9496577978134155
-            ],
+            "name" : "Cylinder",
             "scale" : [
-                0.6035829186439514,
-                0.6035829186439514,
-                0.6035828590393066
+                0.978893518447876,
+                1.158915638923645,
+                0.978893518447876
             ],
             "translation" : [
-                -0.05361813306808472,
-                0.5736034512519836,
-                0.005267784930765629
+                0,
+                3.0620527267456055,
+                0
+            ]
+        },
+        {
+            "children" : [
+                2
+            ],
+            "mesh" : 1,
+            "name" : "Circle",
+            "rotation" : [
+                -0.6728565692901611,
+                0,
+                0,
+                0.7397729754447937
+            ],
+            "scale" : [
+                0.19657789170742035,
+                0.19657789170742035,
+                0.19657789170742035
+            ],
+            "translation" : [
+                -0.04732425883412361,
+                0.2116217166185379,
+                0.6548925638198853
+            ]
+        },
+        {
+            "name" : "Empty",
+            "rotation" : [
+                0.7070879936218262,
+                -0.005150539334863424,
+                -0.005150540731847286,
+                0.707088053226471
+            ],
+            "scale" : [
+                9.841601371765137,
+                9.841601371765137,
+                9.841601371765137
+            ],
+            "translation" : [
+                0,
+                4.700000286102295,
+                0
             ]
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "Material.001",
+            "name" : "Material.003",
             "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
+                "baseColorTexture" : {
+                    "index" : 0,
+                    "texCoord" : 0
+                },
                 "metallicFactor" : 0,
                 "roughnessFactor" : 0.5
             }
         },
         {
             "doubleSided" : true,
-            "name" : "Material.002",
+            "name" : "Material.004",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929,
+                    0.035279110074043274,
+                    0.10247394442558289,
+                    0,
                     1
                 ],
-                "metallicFactor" : 0,
+                "metallicFactor" : 1,
                 "roughnessFactor" : 0.5
             }
         }
     ],
     "meshes" : [
         {
-            "name" : "Icosphere",
+            "name" : "Cylinder",
             "primitives" : [
                 {
                     "attributes" : {
@@ -106,7 +141,12 @@
                     },
                     "indices" : 3,
                     "material" : 0
-                },
+                }
+            ]
+        },
+        {
+            "name" : "Circle",
+            "primitives" : [
                 {
                     "attributes" : {
                         "POSITION" : 4,
@@ -119,122 +159,134 @@
             ]
         }
     ],
+    "textures" : [
+        {
+            "source" : 0
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "texture_wine",
+            "uri" : "texture_wine.jpg"
+        }
+    ],
     "accessors" : [
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 320,
+            "count" : 156,
             "max" : [
-                1.0690029859542847,
-                1.5154151916503906,
-                0.9999999403953552
+                0.9898214340209961,
+                1,
+                0.9594930410385132
             ],
             "min" : [
-                -0.9870226383209229,
-                -1.1011381149291992,
-                -1.0038056373596191
+                -0.9898214936256409,
+                -1,
+                -1
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 320,
+            "count" : 156,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 320,
+            "count" : 156,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 360,
+            "count" : 264,
             "type" : "SCALAR"
         },
         {
             "bufferView" : 4,
             "componentType" : 5126,
-            "count" : 60,
+            "count" : 1556,
             "max" : [
-                -0.23202423751354218,
-                1.3810689449310303,
-                0.05185948312282562
+                0.938360869884491,
+                8.100000381469727,
+                0.9383607506752014
             ],
             "min" : [
-                -0.6065558195114136,
-                1.2506287097930908,
-                -0.2429206371307373
+                -0.9383608102798462,
+                0,
+                -0.938360869884491
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 5,
             "componentType" : 5126,
-            "count" : 60,
+            "count" : 1556,
             "type" : "VEC3"
         },
         {
             "bufferView" : 6,
             "componentType" : 5126,
-            "count" : 60,
+            "count" : 1556,
             "type" : "VEC2"
         },
         {
             "bufferView" : 7,
             "componentType" : 5123,
-            "count" : 90,
+            "count" : 2586,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 3840,
+            "byteLength" : 1872,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 3840,
-            "byteOffset" : 3840
+            "byteLength" : 1872,
+            "byteOffset" : 1872
         },
         {
             "buffer" : 0,
-            "byteLength" : 2560,
-            "byteOffset" : 7680
+            "byteLength" : 1248,
+            "byteOffset" : 3744
         },
         {
             "buffer" : 0,
-            "byteLength" : 720,
-            "byteOffset" : 10240
+            "byteLength" : 528,
+            "byteOffset" : 4992
         },
         {
             "buffer" : 0,
-            "byteLength" : 720,
-            "byteOffset" : 10960
+            "byteLength" : 18672,
+            "byteOffset" : 5520
         },
         {
             "buffer" : 0,
-            "byteLength" : 720,
-            "byteOffset" : 11680
+            "byteLength" : 18672,
+            "byteOffset" : 24192
         },
         {
             "buffer" : 0,
-            "byteLength" : 480,
-            "byteOffset" : 12400
+            "byteLength" : 12448,
+            "byteOffset" : 42864
         },
         {
             "buffer" : 0,
-            "byteLength" : 180,
-            "byteOffset" : 12880
+            "byteLength" : 5172,
+            "byteOffset" : 55312
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 13060,
-            "uri" : "bagtrash.bin"
+            "byteLength" : 60484,
+            "uri" : "wine-green.bin"
         }
     ]
 }

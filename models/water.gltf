@@ -11,66 +11,29 @@
                 0,
                 1,
                 2,
-                3,
-                4,
-                5
+                3
             ]
         }
     ],
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "Cylinder",
-            "rotation" : [
-                0,
-                -0.5351601839065552,
-                0,
-                0.8447506427764893
-            ],
-            "scale" : [
-                1.024997591972351,
-                0.36149507761001587,
-                1.024997591972351
-            ],
-            "translation" : [
-                -0.9921697378158569,
-                0.8538457155227661,
-                1.193123459815979
-            ]
-        },
-        {
-            "mesh" : 1,
-            "name" : "Cylinder.001",
-            "rotation" : [
-                0,
-                0.7646887898445129,
-                0,
-                0.6443998217582703
-            ],
-            "scale" : [
-                1.024997591972351,
-                0.36149507761001587,
-                1.024997591972351
-            ],
-            "translation" : [
-                -0.9983602166175842,
-                0.8538457155227661,
-                1.1800216436386108
-            ]
-        },
-        {
-            "mesh" : 2,
             "name" : "Circle",
             "rotation" : [
-                0,
-                -0.5351601839065552,
-                0,
-                0.8447506427764893
+                -0.3420875072479248,
+                -0.40906381607055664,
+                0.5562629699707031,
+                0.637349545955658
+            ],
+            "scale" : [
+                0.23420581221580505,
+                0.4949566423892975,
+                0.4018872082233429
             ],
             "translation" : [
-                -0.9921697378158569,
-                0,
-                1.193123459815979
+                0.174965500831604,
+                0.16385500133037567,
+                0.48708081245422363
             ]
         },
         {
@@ -119,18 +82,6 @@
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "Material.002",
-            "pbrMetallicRoughness" : {
-                "baseColorTexture" : {
-                    "index" : 0,
-                    "texCoord" : 0
-                },
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.5
-            }
-        },
-        {
-            "doubleSided" : true,
             "name" : "Material.001",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
@@ -146,124 +97,22 @@
     ],
     "meshes" : [
         {
-            "name" : "Cylinder",
-            "primitives" : [
-                {
-                    "attributes" : {
-                        "POSITION" : 0,
-                        "NORMAL" : 1,
-                        "TEXCOORD_0" : 2
-                    },
-                    "indices" : 3,
-                    "material" : 0
-                }
-            ]
-        },
-        {
-            "name" : "Cylinder.001",
-            "primitives" : [
-                {
-                    "attributes" : {
-                        "POSITION" : 4,
-                        "NORMAL" : 5,
-                        "TEXCOORD_0" : 6
-                    },
-                    "indices" : 3,
-                    "material" : 0
-                }
-            ]
-        },
-        {
             "name" : "Circle.001",
             "primitives" : [
                 {
                     "attributes" : {
-                        "POSITION" : 7,
-                        "NORMAL" : 8
+                        "POSITION" : 0,
+                        "NORMAL" : 1
                     },
-                    "indices" : 9,
-                    "material" : 1
+                    "indices" : 2,
+                    "material" : 0
                 }
             ]
-        }
-    ],
-    "textures" : [
-        {
-            "source" : 0
-        }
-    ],
-    "images" : [
-        {
-            "mimeType" : "image/jpeg",
-            "name" : "texture_water",
-            "uri" : "texture_water.jpg"
         }
     ],
     "accessors" : [
         {
             "bufferView" : 0,
-            "componentType" : 5126,
-            "count" : 152,
-            "max" : [
-                1,
-                0.9973024129867554,
-                0.7071067690849304
-            ],
-            "min" : [
-                0.4855692386627197,
-                -0.9962685108184814,
-                -0.8314695954322815
-            ],
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 1,
-            "componentType" : 5126,
-            "count" : 152,
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 2,
-            "componentType" : 5126,
-            "count" : 152,
-            "type" : "VEC2"
-        },
-        {
-            "bufferView" : 3,
-            "componentType" : 5123,
-            "count" : 228,
-            "type" : "SCALAR"
-        },
-        {
-            "bufferView" : 4,
-            "componentType" : 5126,
-            "count" : 152,
-            "max" : [
-                1,
-                0.9973024129867554,
-                0.7071067690849304
-            ],
-            "min" : [
-                0.4855692386627197,
-                -0.9962685108184814,
-                -0.8314695954322815
-            ],
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 5,
-            "componentType" : 5126,
-            "count" : 152,
-            "type" : "VEC3"
-        },
-        {
-            "bufferView" : 6,
-            "componentType" : 5126,
-            "count" : 152,
-            "type" : "VEC2"
-        },
-        {
-            "bufferView" : 7,
             "componentType" : 5126,
             "count" : 1282,
             "max" : [
@@ -279,13 +128,13 @@
             "type" : "VEC3"
         },
         {
-            "bufferView" : 8,
+            "bufferView" : 1,
             "componentType" : 5126,
             "count" : 1282,
             "type" : "VEC3"
         },
         {
-            "bufferView" : 9,
+            "bufferView" : 2,
             "componentType" : 5123,
             "count" : 2088,
             "type" : "SCALAR"
@@ -294,58 +143,23 @@
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 1824,
+            "byteLength" : 15384,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 1824,
-            "byteOffset" : 1824
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 1216,
-            "byteOffset" : 3648
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 456,
-            "byteOffset" : 4864
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 1824,
-            "byteOffset" : 5320
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 1824,
-            "byteOffset" : 7144
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 1216,
-            "byteOffset" : 8968
-        },
-        {
-            "buffer" : 0,
             "byteLength" : 15384,
-            "byteOffset" : 10184
-        },
-        {
-            "buffer" : 0,
-            "byteLength" : 15384,
-            "byteOffset" : 25568
+            "byteOffset" : 15384
         },
         {
             "buffer" : 0,
             "byteLength" : 4176,
-            "byteOffset" : 40952
+            "byteOffset" : 30768
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 45128,
+            "byteLength" : 34944,
             "uri" : "water.bin"
         }
     ]

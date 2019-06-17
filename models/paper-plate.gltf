@@ -38,29 +38,23 @@
                 0.7804827094078064
             ],
             "translation" : [
-                3.2667737007141113,
-                2.5167369842529297,
-                3.150012254714966
+                7.358891487121582,
+                4.958309173583984,
+                6.925790786743164
             ]
         },
         {
             "mesh" : 0,
             "name" : "Cylinder",
-            "rotation" : [
-                0.019758976995944977,
-                0.4405614137649536,
-                0.03269294649362564,
-                0.8969093561172485
-            ],
             "scale" : [
-                0.26349514722824097,
-                0.004066795576363802,
-                0.26349520683288574
+                0.1612844616174698,
+                0.025951437652111053,
+                0.1612844616174698
             ],
             "translation" : [
-                -0.0040773446671664715,
-                0.036406565457582474,
-                -0.006761818192899227
+                0,
+                0.05883660167455673,
+                0
             ]
         }
     ],
@@ -68,16 +62,7 @@
         {
             "doubleSided" : true,
             "name" : "Material.001",
-            "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    1,
-                    1,
-                    1,
-                    1
-                ],
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.4193548262119293
-            }
+            "pbrMetallicRoughness" : {}
         }
     ],
     "meshes" : [
@@ -100,64 +85,64 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 396,
+            "count" : 288,
             "max" : [
-                1.330377459526062,
-                38.98679733276367,
-                1.3483140468597412
+                1.943803071975708,
+                0.05242651700973511,
+                1.9519121646881104
             ],
             "min" : [
-                -1.3874099254608154,
-                -2.467607259750366,
-                -1.3694723844528198
+                -1.954279899597168,
+                -1.7705340385437012,
+                -1.9461709260940552
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 396,
+            "count" : 288,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 396,
+            "count" : 288,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 660,
+            "count" : 474,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 4752,
+            "byteLength" : 3456,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 4752,
-            "byteOffset" : 4752
+            "byteLength" : 3456,
+            "byteOffset" : 3456
         },
         {
             "buffer" : 0,
-            "byteLength" : 3168,
-            "byteOffset" : 9504
+            "byteLength" : 2304,
+            "byteOffset" : 6912
         },
         {
             "buffer" : 0,
-            "byteLength" : 1320,
-            "byteOffset" : 12672
+            "byteLength" : 948,
+            "byteOffset" : 9216
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 13992,
-            "uri" : "plate.bin"
+            "byteLength" : 10164,
+            "uri" : "paper-plate.bin"
         }
     ]
 }
