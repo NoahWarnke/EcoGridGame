@@ -1,4 +1,4 @@
-import DroneHangar from 'dronehangar';
+import {DroneHangar} from 'dronehangar';
 
 /**
  * Represents a drone.

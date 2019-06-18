@@ -2,16 +2,21 @@ import GameBoardSpecification from 'igameboardspecification';
 import PieceType from 'ipiecetype';
 import GameState from 'gamestate';
 import GamePiece from 'gamepiece';
+import {DroneHangar} from 'dronehangar';
+import {Drone} from 'drone';
 
 /**
  * Represents a game board with its pieces.
  */
 export default class GameBoard {
+  
   private gameState: GameState;
   private gamePieces: GamePiece[];
   
   private pieceTypes: PieceType[];
   private donePieceShapes: Shape[];
+  
+  private hangar: DroneHangar
   
   private animating: boolean;
   
@@ -34,6 +39,9 @@ export default class GameBoard {
     this.pieceTypes = spec.pieceTypes;
     this.donePieceShapes = spec.donePieceShapes;
     
+    // Save a reference to our drone hangar, so that we can fetch the drone (and hence control it when needed).
+    this.hangar = spec.hangar;
+    
     // Game entity is a group that contains everything.
     this.gameGroup = new Entity();
     this.gameGroup.addComponent(spec.transform);
@@ -52,9 +60,15 @@ export default class GameBoard {
     this.gamePieces = [];
     this.createPieceEntities();
     
-    this.animating = false;
+    // Create bins.
+    for (let type of this.pieceTypes) {
+      let bin = new Entity();
+      bin.addComponent(type.receptacleShape);
+      bin.addComponent(type.receptacleTransform);
+      bin.setParent(this.gameGroup);
+    }
     
-    //this.placeEnvironmentObjects();
+    this.animating = false;
   }
   
   /**
@@ -84,12 +98,16 @@ export default class GameBoard {
         let piece = ent.addComponent(new GamePiece(x, y, type, ent));
         this.gamePieces.push(piece); // Also keep track of all GamePiece components, for internal logic.
         
-        // Position the piece on the board.
-        ent.addComponent(new Transform({position: new Vector3(x, 0, y), scale: new Vector3(0.3, 0.3, 0.3)}));
-        
         // Give the piece the correct shape.
         let pieceType = this.pieceTypes[type - 1];
-        ent.addComponent(pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)]);
+        let whichShape = pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)];
+        ent.addComponent(whichShape[0]);
+        
+        // Position the piece on the board.
+        ent.addComponent(new Transform({
+          position: new Vector3(x, 0, y),
+          scale: new Vector3(whichShape[1], whichShape[1], whichShape[1]) // Scale piece according to its piece type scale factor.
+        }));
         
         // Make sure the piece is clickable!
         ent.addComponent(new OnClick(() => {
@@ -105,8 +123,16 @@ export default class GameBoard {
   public async handleClick(piece: GamePiece) {
     log('Clicked ' + piece.x + ', ' + piece.y);
     
+    // Make sure player has a drone.
+    if (!this.hangar.playerHasDrone) {
+      // TODO inform player they need to get a drone, somehow.
+      log('No drone, no play.');
+      return;
+    }
+    
+    // Make sure animation not happening (can't click during it).
     if (this.animating) {
-      return; // Can't click during an animation.
+      return;
     }
     
     // Increment the number of moves.
@@ -127,7 +153,6 @@ export default class GameBoard {
     
     // Slide the pieces to their new spots.
     let slides = [];
-    
     for (let [x, y, newX, newY] of slidePairs) {
       for (let i = 0; i < this.gamePieces.length; i++) {
         let piece = this.gamePieces[i];
@@ -139,9 +164,6 @@ export default class GameBoard {
       }
     }
     await Promise.all(slides);
-    
-    this.animating = false;
-    
     log('Slides done!');
     
     // See if we have any 2x2 squares generated from the slide.
@@ -179,15 +201,61 @@ export default class GameBoard {
     }
     
     // For each type, blink the deleted pices (TODO replace with drone sucking and dumping into bins)).
+    let drone = this.hangar.playerDrone.getComponent(Drone);
     for (let type of types) {
+      
+      // Calculate center of gravity of the pieces of this type.
+      let cg = new Vector3();
+      for (let piece of deletedPiecesByType[type]) {
+        cg.x += piece.x;
+        cg.z += piece.y; // y on gameboard is z coordinate in normal space
+      }
+      cg.x /= deletedPiecesByType[type].length;
+      cg.z /= deletedPiecesByType[type].length;
+      
+      // Convert CG to worldspace from gameboard space.
+      let gameTransf = this.gameGroup.getComponent(Transform);
+      let gamePos = gameTransf.position;
+      let gameRot = gameTransf.rotation;
+      let piecesPos = this.pieceSet.getComponent(Transform).position; // no rotation on that.
+      
+      let droneMouthWorldspace = new Vector3(gamePos.x, gamePos.y, gamePos.z);
+      droneMouthWorldspace.addInPlace(piecesPos.rotate(gameRot));
+      droneMouthWorldspace.addInPlace(cg); // again, no rotation on pieceSet.
+      
+      // Add height to CG in worldspace (this is where mouth of drone will go)
+      droneMouthWorldspace.y += 1; // drone 1m up?
+      
+      // Convert worldspace CG+height back to gameboard space
+      let droneMouthGamespace = new Vector3(droneMouthWorldspace.x, droneMouthWorldspace.y, droneMouthWorldspace.z);
+      droneMouthGamespace.subtractInPlace(gamePos);
+      droneMouthGamespace.subtractInPlace(piecesPos.rotate(gameRot));
+      
+      // Send drone to worldspace CG+height.
+      await drone.goto(droneMouthWorldspace);
+      log('Drone hovering over pieces of type ' + type + ' to suck them up!');
+      
+      // TODO change blinking to suck-to-dronemouth anims.
       let blinkPromises = [];
       for (let piece of deletedPiecesByType[type]) {
         blinkPromises.push(piece.showDeletion());
       }
       
-      log ('Blinking ' + blinkPromises.length + ' of type ' + type);
+      log('Blinking ' + blinkPromises.length + ' of type ' + type);
       await Promise.all(blinkPromises);
-      log ('Blinking done.');
+      log('Blinking done.');
+      
+      // Calculate worldspace coords of appropriate bin.
+      let binWorldspace = new Vector3(gamePos.x, gamePos.y, gamePos.z);
+      binWorldspace.addInPlace(this.pieceTypes[type - 1].receptacleTransform.position.rotate(gameRot));
+      binWorldspace.y += 2; // Make drone hover above it, not in it :P
+      
+      // Send drone there next.
+      await drone.goto(binWorldspace);
+      log('Drone hovering over bin for type ' + type + 'to dump the pieces!');
+      
+      drone.resumeWander();
+      log('Drone done with trash duty; resuming random wander.');
     }
     
     // Delete all pieces of all types that are marked for deletion, and replace with done types.
@@ -205,26 +273,5 @@ export default class GameBoard {
     
     // Unlock game state now that animations and updates are done.
     this.animating = false;
-  }
-
-  public placeEnvironmentObjects() {
-
-    let penguin = new Entity();
-    penguin.addComponent(new Transform({
-      position: new Vector3(8, 8, 2),
-      scale: new Vector3(1, 1, 1)
-    }));
-    penguin.addComponent(new GLTFShape("models/shoe.glb"))
-    engine.addEntity(penguin);
-
-
-    let sealion = new Entity();
-    sealion.addComponent(new Transform({
-      position: new Vector3(5, 1, -2),
-      scale: new Vector3(0.5, 0.5, 0.5)
-    }));
-    sealion.addComponent(new GLTFShape("models/sealion.glb"))
-    engine.addEntity(sealion);
-
   }
 }

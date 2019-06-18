@@ -5,5 +5,5 @@
 export default interface IPieceType {
   receptacleShape: Shape,
   receptacleTransform: Transform,
-  shapes: Shape[]
+  shapes: [Shape, number][]
 }

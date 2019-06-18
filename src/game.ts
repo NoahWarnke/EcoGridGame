@@ -4,55 +4,67 @@ import GamePieceSlideSystem from 'gamepieceslidesystem';
 import GamePieceDeleteSystem from 'gamepiecedeletesystem';
 import {DroneSystem} from 'dronesystem';
 import GameBoard from 'gameboard';
-import DroneHangar from 'dronehangar';
+import {DroneHangar} from 'dronehangar';
 
 // Add our systems for animation.
 engine.addSystem(new GamePieceSlideSystem());
 engine.addSystem(new GamePieceDeleteSystem());
 engine.addSystem(new DroneSystem());
 
+// Drone hangar for spawning drones.
+let hangar = new DroneHangar(new Transform({position: new Vector3(24, 0, 8)}));
+
 // Instantiate a new game board.
 let cyl = new CylinderShape();
 cyl.radiusTop = 1.0; // So it's not a cone.
-cyl.arc = 0.5;
+
+
 
 // 4x4 with just trash bag versus bottle.
-/*
+let gameBoardSmallLandfillPieces: [Shape, number][] = [
+  [new GLTFShape('models/bagtrash.gltf'), 0.25]
+];
+
+let gameBoardSmallRecyclePieces: [Shape, number][] = [
+  [new GLTFShape('models/bottle.gltf'), 0.1]
+];
+
 let gameBoardSmall = new GameBoard({
   dimensions: {x: 4, y: 4},
   transform: new Transform({
     position: new Vector3(4, 0, 4)
   }),
-  boardShape: new BoxShape(),
   pieceTypes: [
     // Landfill
     {
-        receptacleShape: new CylinderShape(),
+        receptacleShape: cyl,
         receptacleTransform: new Transform({
-          position: new Vector3(-3, 0, 0)
+          position: new Vector3(-3, 0, 5),
+          scale: new Vector3(1, 1.5, 1)
         }),
-        shapes: [new GLTFShape('models/bagtrash.gltf')]
+        shapes: gameBoardSmallLandfillPieces // can't define in place, for some reason.
     },
     // Recycling
     {
-        receptacleShape: new CylinderShape(),
+        receptacleShape: cyl,
         receptacleTransform: new Transform({
-          position: new Vector3(0, 0, 3)
+          position: new Vector3(0, 0, 5),
+          scale: new Vector3(1, 1.5, 1)
         }),
-        shapes: [new GLTFShape('models/bottle.gltf')]
+        shapes: gameBoardSmallRecyclePieces
     },
   ],
   // Nature
-  donePieceShapes: [cyl]
+  donePieceShapes: [cyl],
+  hangar
 });
-
+/*
 // 5x5 with two types of recycling and trash
 let gameBoardMedium = new GameBoard({
   dimensions: {x: 5,y: 5},
   transform: new Transform({
     position: new Vector3(4, 0, 12)
   }),
-  boardShape: new BoxShape(),
   pieceTypes: [
     // Landfill
     {
@@ -72,7 +84,8 @@ let gameBoardMedium = new GameBoard({
     }
   ],
   // Nature
-  donePieceShapes: [cyl]
+  donePieceShapes: [cyl],
+  hangar
 });
 
 // 6x6 with 2x trash, recycling, compost
@@ -81,7 +94,6 @@ let gameBoardMedHard = new GameBoard({
   transform: new Transform({
     position: new Vector3(16, 0, 12)
   }),
-  boardShape: new BoxShape(),
   pieceTypes: [
     // Landfill
     {
@@ -109,7 +121,8 @@ let gameBoardMedHard = new GameBoard({
     }
   ],
   // Nature
-  donePieceShapes: [cyl]
+  donePieceShapes: [cyl],
+  hangar
 });
 
 // 8x8 with 3x(eventually) trash, recycling, Compost
@@ -118,7 +131,6 @@ let gameBoardHard = new GameBoard({
   transform: new Transform({
     position: new Vector3(16, 0, 4)
   }),
-  boardShape: new BoxShape(),
   pieceTypes: [
     // Landfill
     {
@@ -146,8 +158,7 @@ let gameBoardHard = new GameBoard({
     }
   ],
   // Nature
-  donePieceShapes: [cyl]
+  donePieceShapes: [cyl],
+  hangar
 });
 */
-
-let hangar = new DroneHangar(new Transform({position: new Vector3(24, 0, 8)}));

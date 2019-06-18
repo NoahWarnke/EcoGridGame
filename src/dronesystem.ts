@@ -56,6 +56,13 @@ export class DroneSystem {
    */
   private updateHover(drone: Drone, transform: Transform, dt: number) {
     
+    // Check if user escaped while it was hovering, and chase them down if so.
+    if (transform.position.subtract(Camera.instance.position).length() > 20) {
+      drone.state = "wander";
+      drone.speed = 8; // Enable it to catch up!
+      return;
+    }
+    
     transform.position.y = Math.cos(drone.hoverAngle) * 0.1 + drone.hoverHeight; // 0.1m hover amplitude.
     
     drone.hoverAngle += Math.PI * 2 * dt; // 0.5-second period on the hover.
