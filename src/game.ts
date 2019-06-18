@@ -20,6 +20,18 @@ heightmap.addComponent(new Transform({
 heightmap.addComponent(new GLTFShape('models/heightmap_nocollide.glb'));
 engine.addEntity(heightmap);
 
+let pond = new Entity();
+pond.addComponent(new Transform({
+  position: new Vector3(45, 1.8, 30),
+  scale: new Vector3(50, 40, 1),
+  rotation: Quaternion.Euler(90, 0, 0)
+}));
+pond.addComponent(new PlaneShape());
+let lightblue = new Material();
+lightblue.albedoColor = new Color3(0.5, 0.5, 1);
+pond.addComponent(lightblue);
+engine.addEntity(pond);
+
 // Drone hangar for spawning drones.
 let hangar = new DroneHangar(new Transform({position: new Vector3(24, 0, 8)}));
 
