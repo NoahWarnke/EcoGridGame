@@ -11,6 +11,15 @@ engine.addSystem(new GamePieceSlideSystem());
 engine.addSystem(new GamePieceDeleteSystem());
 engine.addSystem(new DroneSystem());
 
+// Heightmap.
+let heightmap = new Entity();
+heightmap.addComponent(new Transform({
+  position: new Vector3(40, 0, 48),
+  scale: new Vector3(6.79, 8, 8.145)
+}));
+heightmap.addComponent(new GLTFShape('models/heightmap_nocollide.glb'));
+engine.addEntity(heightmap);
+
 // Drone hangar for spawning drones.
 let hangar = new DroneHangar(new Transform({position: new Vector3(24, 0, 8)}));
 
