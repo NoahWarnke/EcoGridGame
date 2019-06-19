@@ -1,5 +1,6 @@
 import GameState from 'gamestate';
 import GamePiece from 'gamepiece';
+import IGameBoardSpecification from 'igameboardspecification';
 import GamePieceSlideSystem from 'gamepieceslidesystem';
 import GamePieceDeleteSystem from 'gamepiecedeletesystem';
 import {DroneSystem} from 'dronesystem';
@@ -7,11 +8,18 @@ import GameBoard from 'gameboard';
 import {DroneHangar} from 'dronehangar';
 import {Landscape} from 'landscape';
 
+// This will be shared into any objects that need to know global info about game state.
+let globalGameState = {
+  totalGames: 0,
+  finishedGames: 0
+};
+
 // Add our systems for animation.
 engine.addSystem(new GamePieceSlideSystem());
 engine.addSystem(new GamePieceDeleteSystem());
 engine.addSystem(new DroneSystem());
 
+// Non-interactive landscape elements.
 let landscape = new Landscape();
 
 // Drone hangar for spawning drones.
@@ -20,7 +28,7 @@ let hangar = new DroneHangar(new Transform({
   rotation: new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
 }));
 
-// Instantiate a new game board.
+// Temporary model for bins etc.
 let cyl = new CylinderShape();
 cyl.radiusTop = 1.0; // So it's not a cone.
 
@@ -32,36 +40,45 @@ let pieceModels: {[index: string]: [Shape, number]} = {
   'water': [new GLTFShape('models/water.gltf'), 0.1]
 };
 
-// 4x4 with just trash bag versus bottle.
-let gameBoardSmall = new GameBoard({
-  dimensions: {x: 4, y: 4},
-  transform: new Transform({
-    position: new Vector3(4, 0, 4)
-  }),
-  pieceTypes: [
-    // Landfill
-    {
-        receptacleShape: cyl,
-        receptacleTransform: new Transform({
-          position: new Vector3(-3, 0, 5),
-          scale: new Vector3(1, 1.5, 1)
-        }),
-        shapes: [pieceModels.trashbag] // can't define in place, for some reason.
-    },
-    // Recycling
-    {
-        receptacleShape: cyl,
-        receptacleTransform: new Transform({
-          position: new Vector3(0, 0, 5),
-          scale: new Vector3(1, 1.5, 1)
-        }),
-        shapes: [pieceModels.bottle]
-    },
-  ],
-  // Nature
-  donePieceShapes: [cyl],
-  hangar
-});
+let gameSpecs: IGameBoardSpecification[] = [
+  // 4x4 with just trash bag versus bottle.
+  {
+    dimensions: {x: 4, y: 4},
+    transform: new Transform({
+      position: new Vector3(4, 0, 4)
+    }),
+    pieceTypes: [
+      // Landfill
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(-3, 0, 5),
+            scale: new Vector3(1, 1.5, 1)
+          }),
+          shapes: [pieceModels.trashbag] // can't define in place, for some reason.
+      },
+      // Recycling
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(0, 0, 5),
+            scale: new Vector3(1, 1.5, 1)
+          }),
+          shapes: [pieceModels.bottle]
+      },
+    ],
+    // Nature
+    donePieceShapes: [cyl],
+    hangar
+  }
+];
+
+let gameBoards = [];
+for (let i = 0; i < gameSpecs.length; i++) {
+  gameBoards.push(new GameBoard(gameSpecs[i], globalGameState));
+}
+globalGameState.totalGames = gameSpecs.length;
+
 /*
 // 5x5 with two types of recycling and trash
 let gameBoardMedium = new GameBoard({

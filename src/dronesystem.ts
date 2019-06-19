@@ -21,6 +21,10 @@ export class DroneSystem {
           this.updateSpawning(drone, transform, dt);
           break;
         }
+        case "despawning": {
+          this.updateDespawning(drone, transform, dt);
+          break;
+        }
         case "hover": {
           this.updateHover(drone, transform, dt);
           break;
@@ -42,12 +46,22 @@ export class DroneSystem {
    */
   private updateSpawning(drone: Drone, transform: Transform, dt: number) {
     drone.spawnTimer += dt;
-    transform.position.y += dt * this.droneSpeed; // rise at 1m/s TODO make better
+    transform.position.y += dt; // rise at 1m/s TODO make better
     if (drone.spawnTimer > 4) {
       log("Drone transitioning to wandering!");
       drone.spawnTimer = 0;
       drone.state = "wander";
       drone.chooseRandomTarget();
+    }
+  }
+  
+  private updateDespawning(drone: Drone, transform: Transform, dt: number) {
+    drone.spawnTimer += dt;
+    transform.position.y -= dt; // TODO
+    if (drone.spawnTimer > 4) {
+      drone.state = "";
+      drone.spawnTimer = 0;
+      drone.resolveDespawn(); // Let anybody waiting know despawn done.
     }
   }
   

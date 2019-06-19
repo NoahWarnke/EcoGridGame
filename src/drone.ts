@@ -26,6 +26,8 @@ export class Drone {
   
   public gotoResolved: boolean;
   
+  public resolveDespawn: Function;
+  
   /**
    * Construct a new Drone.
    */
@@ -86,7 +88,20 @@ export class Drone {
       Math.random() * 0.1 + 0.05, // always over y=0.
       Math.random() - 0.5
     );
-    random = random.normalize().scale(Math.random() * 15 + 5); // 20 is max distance from user.
+    random = random.normalize().scale(Math.random() * 5 + 5); // Go between 5 and 10m away.
     this.targetPos = random.add(Camera.instance.position);
+  }
+  
+  public despawn(): Promise<void> {
+    log("Drone forced to despawn!");
+    this.state = "despawning";
+    
+    return new Promise((resolve, reject) => {
+      this.resolveDespawn = () => {
+        log ("Drone despawn promise resolving!");
+        this.resolveDespawn = undefined;
+        resolve();
+      }
+    });
   }
 }

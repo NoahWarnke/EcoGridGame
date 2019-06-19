@@ -34,6 +34,11 @@ export default class GameState {
    * This is the actual grid. Each grid cell is a GameCell object.
    */
   private grid: GameCell[][] = [];
+  
+  /**
+   * True once game is won.
+   */
+  private won: boolean = false;
 
   /**
    * Construct a new GameState given the size of the grid and the number of objects in it.
@@ -309,20 +314,16 @@ export default class GameState {
   }
   
   /**
-   * Delete all cells marked for deletion and replace with new random(?) values.
+   * Can't have 1-3 pieces of any type, so if we're not deleting all of them, preserve enough to have at least 4.
    */
-  public deleteAndReplace() {
+  public unmarkPiecesNeededForAtLeastFour() {
     
     // Count how many will remain of the deleted type.
-    
     let markedForDeletion: GameCell[] = [];
     for (let x = 0; x < this.nx; x++) {
       for (let y = 0; y < this.ny; y++) {
         if (this.grid[x][y].del) {
           markedForDeletion.push(this.grid[x][y]);
-          this.grid[x][y].del = false;
-          log(x + ", " + y);
-          log(this.grid[x][y]);
         }
       }
     }
@@ -333,9 +334,7 @@ export default class GameState {
     }
     
     let typeBeingDeleted = markedForDeletion[0].type;
-    log('current number of type ' + typeBeingDeleted + ': ' + this.numOfEachType[typeBeingDeleted]);
-    
-    log('Markedfordeletion length ' + markedForDeletion.length);
+    log('current number of type ' + typeBeingDeleted + ': ' + this.numOfEachType[typeBeingDeleted] + ', Markedfordeletion length ' + markedForDeletion.length);
     
     if (markedForDeletion.length > this.numOfEachType[typeBeingDeleted]) {
       log('Error!!!');
@@ -349,17 +348,40 @@ export default class GameState {
     if (numLeft > 0 && numLeft < 4) {
       numKept = 4 - numLeft;
       
+      log('Unmarking ' + numKept);
+      
       // Randomly 'save from deletion' the correct number.
       for (var i = 0; i < numKept; i++) {
-        markedForDeletion.splice(Math.floor(Math.random() * markedForDeletion.length), 1);
+        let index = Math.floor(Math.random() * markedForDeletion.length);
+        markedForDeletion[index].del = false; // No longer marked!
+        markedForDeletion.splice(index, 1);   // Remove from list so we don't undelete it again.
+      }
+    }
+  }
+  
+  /**
+   * Delete all cells marked for deletion and replace with done pieces.
+   */
+  public deleteAndReplace() {
+    
+    for (let x = 0; x < this.nx; x++) {
+      for (let y = 0; y < this.ny; y++) {
+        let cell = this.grid[x][y];
+        if (cell.del) {
+          this.numOfEachType[cell.type] -= 1;
+          cell.type = -1;
+          cell.del = false;
+        }
       }
     }
     
-    // Finally swap types for all the ones still marked for deletion to -1, aka the done piece.
-    for (let cell of markedForDeletion) {
-      cell.type = -1;
+    let numRemaining = 0;
+    for (let type = 1; type <= this.numTypes; type++) {
+      numRemaining += this.numOfEachType[type];
     }
-    this.numOfEachType[typeBeingDeleted] -= markedForDeletion.length;
+    if (numRemaining === 0) {
+      this.won = true;
+    }
   }
   
   /**
@@ -367,5 +389,12 @@ export default class GameState {
    */
   public incrementMoves() {
     this.numMoves++;
+  }
+  
+  /**
+   * Return true if the game is won!
+   */
+  public isWon() {
+    return this.won;
   }
 }

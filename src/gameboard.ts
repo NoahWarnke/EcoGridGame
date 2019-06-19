@@ -10,6 +10,7 @@ import {Drone} from 'drone';
  */
 export default class GameBoard {
   
+  private globalGameState: {finishedGames: number, totalGames: number};
   private gameState: GameState;
   private gamePieces: GamePiece[];
   
@@ -26,7 +27,10 @@ export default class GameBoard {
   /**
    * Construct a new GameBoard from the given GameBoardSpec.
    */
-  constructor(spec: GameBoardSpecification) {
+  constructor(spec: GameBoardSpecification, globalGameState: {finishedGames: number, totalGames: number}) {
+    
+    // Pointer to global state we might want to modify.
+    this.globalGameState = globalGameState;
     
     // Create the state.
     this.gameState = new GameState(
@@ -130,6 +134,13 @@ export default class GameBoard {
       return;
     }
     
+    /**
+     * Game is won, so no further interaction needed.
+     */
+    if (this.gameState.isWon()) {
+      return;
+    }
+    
     // Make sure animation not happening (can't click during it).
     if (this.animating) {
       return;
@@ -186,6 +197,7 @@ export default class GameBoard {
     // For each type, mark connected pieces for deletion.
     for (let type of types) {
       this.gameState.markConnectedForDeletion(type);
+      this.gameState.unmarkPiecesNeededForAtLeastFour();
     }
     
     // For each type, get a list of the pieces that will be deleted.
@@ -271,7 +283,22 @@ export default class GameBoard {
       }
     }
     
-    // Unlock game state now that animations and updates are done.
+    // Unlock game state now that board animations and updates are done.
     this.animating = false;
+    
+    // Finally, check for global game being won, and send the drone home if so.
+    if (this.gameState.isWon()) {
+      log("Woo congrats, you finished the board!");
+      this.globalGameState.finishedGames++; // let global state know.
+      
+      
+      if (this.globalGameState.finishedGames === this.globalGameState.totalGames) {
+        let drone = this.hangar.playerDrone.getComponent(Drone);
+        log("Wow, all boards complete! You win!!!");
+        await drone.goto(this.hangar.getDroneSpot());
+        await drone.despawn();
+      }
+    }
+
   }
 }
