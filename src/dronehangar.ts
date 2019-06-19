@@ -35,7 +35,7 @@ export class DroneHangar {
       
       // Our drone entity.
       this.playerDrone = new Entity();
-      this.playerDrone.addComponent(new GLTFShape('models/vacuum.gltf'));
+      this.playerDrone.addComponent(new GLTFShape('models/drone/vacuum.gltf'));
       this.playerDrone.addComponent(new Transform({
         position: new Vector3(transform.position.x - 6, transform.position.y + 2.5, transform.position.z),
         scale: new Vector3(0.2, 0.2, 0.2)

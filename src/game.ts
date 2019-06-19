@@ -5,51 +5,34 @@ import GamePieceDeleteSystem from 'gamepiecedeletesystem';
 import {DroneSystem} from 'dronesystem';
 import GameBoard from 'gameboard';
 import {DroneHangar} from 'dronehangar';
+import {Landscape} from 'landscape';
 
 // Add our systems for animation.
 engine.addSystem(new GamePieceSlideSystem());
 engine.addSystem(new GamePieceDeleteSystem());
 engine.addSystem(new DroneSystem());
 
-// Heightmap.
-let heightmap = new Entity();
-heightmap.addComponent(new Transform({
-  position: new Vector3(40, 0, 48),
-  scale: new Vector3(6.79, 8, 8.145)
-}));
-heightmap.addComponent(new GLTFShape('models/heightmap_nocollide.glb'));
-engine.addEntity(heightmap);
-
-let pond = new Entity();
-pond.addComponent(new Transform({
-  position: new Vector3(45, 1.8, 30),
-  scale: new Vector3(50, 40, 1),
-  rotation: Quaternion.Euler(90, 0, 0)
-}));
-pond.addComponent(new PlaneShape());
-let lightblue = new Material();
-lightblue.albedoColor = new Color3(0.5, 0.5, 1);
-pond.addComponent(lightblue);
-engine.addEntity(pond);
+let landscape = new Landscape();
 
 // Drone hangar for spawning drones.
-let hangar = new DroneHangar(new Transform({position: new Vector3(24, 0, 8)}));
+let hangar = new DroneHangar(new Transform({
+  position: new Vector3(29, 2.93, 86),
+  rotation: new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
+}));
 
 // Instantiate a new game board.
 let cyl = new CylinderShape();
 cyl.radiusTop = 1.0; // So it's not a cone.
 
-
+let pieceModels: {[index: string]: [Shape, number]} = {
+  'trashbag': [new GLTFShape('models/trash/landfill/bagtrash.gltf'), 0.25],
+  'chips': [new GLTFShape('models/trash/landfill/chips05.gltf'), 0.1],
+  'bottle': [new GLTFShape('models/trash/recycling/bottle.gltf'), 0.1],
+  'plate': [new GLTFShape('models/plate.gltf'), 0.2],
+  'water': [new GLTFShape('models/water.gltf'), 0.1]
+};
 
 // 4x4 with just trash bag versus bottle.
-let gameBoardSmallLandfillPieces: [Shape, number][] = [
-  [new GLTFShape('models/bagtrash.gltf'), 0.25]
-];
-
-let gameBoardSmallRecyclePieces: [Shape, number][] = [
-  [new GLTFShape('models/bottle.gltf'), 0.1]
-];
-
 let gameBoardSmall = new GameBoard({
   dimensions: {x: 4, y: 4},
   transform: new Transform({
@@ -63,7 +46,7 @@ let gameBoardSmall = new GameBoard({
           position: new Vector3(-3, 0, 5),
           scale: new Vector3(1, 1.5, 1)
         }),
-        shapes: gameBoardSmallLandfillPieces // can't define in place, for some reason.
+        shapes: [pieceModels.trashbag] // can't define in place, for some reason.
     },
     // Recycling
     {
@@ -72,7 +55,7 @@ let gameBoardSmall = new GameBoard({
           position: new Vector3(0, 0, 5),
           scale: new Vector3(1, 1.5, 1)
         }),
-        shapes: gameBoardSmallRecyclePieces
+        shapes: [pieceModels.bottle]
     },
   ],
   // Nature
