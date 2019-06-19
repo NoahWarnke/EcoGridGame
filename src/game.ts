@@ -36,8 +36,12 @@ let pieceModels: {[index: string]: [Shape, number]} = {
   'trashbag': [new GLTFShape('models/trash/landfill/bagtrash.gltf'), 0.25],
   'chips': [new GLTFShape('models/trash/landfill/chips05.gltf'), 0.1],
   'bottle': [new GLTFShape('models/trash/recycling/bottle.gltf'), 0.1],
-  'plate': [new GLTFShape('models/plate.gltf'), 0.2],
-  'water': [new GLTFShape('models/water.gltf'), 0.1]
+  'plate': [new GLTFShape('models/trash/recycling/plate.gltf'), 0.2],
+  'water': [new GLTFShape('models/trash/recycling/water.gltf'), 0.1],
+  'rock0': [new GLTFShape('models/nature/rock.gltf'), 0.02],
+  'rock1': [new GLTFShape('models/nature/rock1.gltf'), 0.02],
+  'rock2': [new GLTFShape('models/nature/rock2.gltf'), 0.02],
+  //'rocks': [new GLTFShape('models/nature/rocks.gltf'), 0.01], // doesn't look quite right for a single piece.
 };
 
 let gameSpecs: IGameBoardSpecification[] = [
@@ -45,7 +49,7 @@ let gameSpecs: IGameBoardSpecification[] = [
   {
     dimensions: {x: 4, y: 4},
     transform: new Transform({
-      position: new Vector3(4, 0, 4)
+      position: new Vector3(21, 3, 86)
     }),
     pieceTypes: [
       // Landfill
@@ -68,6 +72,34 @@ let gameSpecs: IGameBoardSpecification[] = [
       },
     ],
     // Nature
+    donePieceShapes: [pieceModels.rock0, pieceModels.rock1, pieceModels.rock2],
+    hangar
+  },
+  // 5x5 with two types of recycling and trash
+  {
+    dimensions: {x: 5,y: 5},
+    transform: new Transform({
+      position: new Vector3(4, 0, 4)
+    }),
+    pieceTypes: [
+      // Landfill
+      {
+          receptacleShape: new CylinderShape(),
+          receptacleTransform: new Transform({
+            position: new Vector3(-3, 0, 0)
+          }),
+          shapes: [pieceModels.chips, pieceModels.trashbag]
+      },
+      // Recycling
+      {
+          receptacleShape: new CylinderShape(),
+          receptacleTransform: new Transform({
+            position: new Vector3(0, 0, 3)
+          }),
+          shapes: [pieceModels.bottle, pieceModels.plate]
+      }
+    ],
+    // Nature
     donePieceShapes: [cyl],
     hangar
   }
@@ -80,34 +112,8 @@ for (let i = 0; i < gameSpecs.length; i++) {
 globalGameState.totalGames = gameSpecs.length;
 
 /*
-// 5x5 with two types of recycling and trash
-let gameBoardMedium = new GameBoard({
-  dimensions: {x: 5,y: 5},
-  transform: new Transform({
-    position: new Vector3(4, 0, 12)
-  }),
-  pieceTypes: [
-    // Landfill
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(-3, 0, 0)
-        }),
-        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')]
-    },
-    // Recycling
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(0, 0, 3)
-        }),
-        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf')]
-    }
-  ],
-  // Nature
-  donePieceShapes: [cyl],
-  hangar
-});
+
+let gameBoardMedium = new GameBoard();
 
 // 6x6 with 2x trash, recycling, compost
 let gameBoardMedHard = new GameBoard({

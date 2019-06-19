@@ -11,6 +11,6 @@ export default interface IGameBoardSpecification {
   },
   transform: Transform,
   pieceTypes: IPieceType[],
-  donePieceShapes: Shape[],
+  donePieceShapes: [Shape, number][],
   hangar: DroneHangar
 }

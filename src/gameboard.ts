@@ -15,7 +15,7 @@ export default class GameBoard {
   private gamePieces: GamePiece[];
   
   private pieceTypes: PieceType[];
-  private donePieceShapes: Shape[];
+  private donePieceShapes: [Shape, number][];
   
   private hangar: DroneHangar
   
@@ -279,7 +279,9 @@ export default class GameBoard {
       // Grab new cell type, and if it's -1 but the piece's type isn't -1, we know we have a swap to do!
       if (piece.type !== -1 && this.gameState.getCellAt(piece.x, piece.y).type === -1) {
         piece.type = -1;
-        piece.entity.addComponentOrReplace(this.donePieceShapes[Math.floor(Math.random() * this.donePieceShapes.length)]);
+        let donePiece: [Shape, number] = this.donePieceShapes[Math.floor(Math.random() * this.donePieceShapes.length)];
+        piece.entity.addComponentOrReplace(donePiece[0]);
+        piece.entity.getComponent(Transform).scale.set(donePiece[1], donePiece[1], donePiece[1]);
       }
     }
     
