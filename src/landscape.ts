@@ -81,13 +81,35 @@ export class Landscape {
     // One entry per type of tree (or other natural item).
     let treeTypes = {
       dead: {model: new GLTFShape('models/landscape/Tree2.glb'), scale: 0.1},
-      bushy: {model: new GLTFShape('models/landscape/Tree3.glb'), scale: 0.1}
+      bushy: {model: new GLTFShape('models/landscape/Tree3.glb'), scale: 0.1},
+      bush1: {model: new GLTFShape('models/landscape/Bush1.glb'), scale: 0.1},
+      bush2: {model: new GLTFShape('models/landscape/Bush2.glb'), scale: 0.1},
+      flower1: {model: new GLTFShape('models/landscape/Flower1.glb'), scale: 0.1},
+      flower2: {model: new GLTFShape('models/landscape/Flower2.glb'), scale: 0.1},
+      flower3: {model: new GLTFShape('models/landscape/Flower3.glb'), scale: 0.1},
+      flower4: {model: new GLTFShape('models/landscape/Flower4.glb'), scale: 0.1},
+      wheat: {model: new GLTFShape('models/landscape/Grass1.glb'), scale: 0.1},
+      small_grass: {model: new GLTFShape('models/landscape/Grass2.glb'), scale: 0.1},
+      large_grass: {model: new GLTFShape('models/landscape/Grass3.glb'), scale: 0.1},
+      mush1: {model: new GLTFShape('models/landscape/Mushroom1.glb'), scale: 0.1},
+      mush2: {model: new GLTFShape('models/landscape/Mushroom2.glb'), scale: 0.1},
+      mush3: {model: new GLTFShape('models/landscape/Mushroom3.glb'), scale: 0.1},
+      rocks: {model: new GLTFShape('models/landscape/Rocks.glb'), scale: 0.1},
+      maple: {model: new GLTFShape('models/landscape/Tree4.glb'), scale: 0.1},
+      maple_red: {model: new GLTFShape('models/landscape/Tree5.glb'), scale: 0.1},
+      slim_palm: {model: new GLTFShape('models/landscape/Tree6.glb'), scale: 0.1},
+      wide_palm: {model: new GLTFShape('models/landscape/Tree7.glb'), scale: 0.1},
+      high_palm: {model: new GLTFShape('models/landscape/Tree8.glb'), scale: 0.1},
+      banana: {model: new GLTFShape('models/landscape/Tree9.glb'), scale: 0.1},
+      slim_banana: {model: new GLTFShape('models/landscape/Tree10.glb'), scale: 0.1},
+      ficus: {model: new GLTFShape('models/landscape/Tree11.glb'), scale: 0.1}
     };
     
     // One entry per actual instance of a tree.
     let trees = [
-      {transform: {position: new Vector3(40, 3, 40), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bushy},
-      {transform: {position: new Vector3(60, 3, 40), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.dead}
+      {transform: {position: new Vector3(40, 3, 40), rotation: Quaternion.Euler(13.4, 7, 57.4)}, type: treeTypes.bushy},
+      {transform: {position: new Vector3(60, 3, 40), rotation: Quaternion.Euler(7.5, 3.3, 75.5)}, type: treeTypes.bushy},
+      {transform: {position: new Vector3(60, 3, 40), rotation: Quaternion.Euler(25.9, 2.3, 50)}, type: treeTypes.dead},
     ]
     
     // Create tree entities!
