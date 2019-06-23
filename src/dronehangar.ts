@@ -6,6 +6,8 @@ import {Drone} from 'drone';
 export class DroneHangar {
   
   public rootGroup: Entity;
+  public hangar: Entity;
+  public hangarAnimator: Animator;
   
   public playerHasDrone: boolean;
   public playerDrone: Entity;
@@ -18,13 +20,22 @@ export class DroneHangar {
     this.rootGroup.addComponent(transform);
     engine.addEntity(this.rootGroup);
     
-    let dummyHangar = new Entity();
-    dummyHangar.setParent(this.rootGroup);
-    dummyHangar.addComponent(new GLTFShape('models/drone/DroneHut.glb'));
-    dummyHangar.addComponent(new Transform({scale: new Vector3(0.8, 0.8, 0.8)}));
+    this.hangar = new Entity();
+    this.hangar.setParent(this.rootGroup);
+    this.hangar.addComponent(new GLTFShape('models/drone/DroneHut.glb'));
+    this.hangar.addComponent(new Transform({scale: new Vector3(0.8, 0.8, 0.8)}));
+    
+    // Enable animations of hangar.
+    this.hangarAnimator = new Animator();
+    this.hangar.addComponent(this.hangarAnimator);
+    
+    // Twirling radar animation
+    let radarSpinClip = new AnimationState("Cylinder.001Action.001");
+    this.hangarAnimator.addClip(radarSpinClip);
+    radarSpinClip.play();
     
     // When drone hangar is clicked, make it spawn a drone.
-    dummyHangar.addComponent(new OnClick(() => {
+    this.hangar.addComponent(new OnClick(() => {
       this.createDrone();
     }));
   }
@@ -58,9 +69,28 @@ export class DroneHangar {
     let droneSoundSource = new AudioSource(droneSoundClip);
     droneSoundSource.loop = true;
     droneSoundSource.playing = true;
+    droneSoundSource.volume = 0.3;
     this.playerDrone.addComponent(droneSoundSource);
     
     engine.addEntity(this.playerDrone);
+    
+    // Also do SFX for launch!
+    this.playLaunchSound();
+    this.playLaunchAnimation();
+  }
+  
+  public playLaunchAnimation() {
+    let doorOpenClip = new AnimationState("Cube.001Action");
+    this.hangarAnimator.addClip(doorOpenClip);
+    doorOpenClip.play();
+  }
+  
+  public playLaunchSound() {
+    let clip = new AudioClip('sounds/ecogames_drone_launch.mp3');
+    let source = new AudioSource(clip);
+    source.playing = true;
+    source.volume = 2;
+    this.rootGroup.addComponent(source);
   }
   
   public removeDrone() {
@@ -78,6 +108,6 @@ export class DroneHangar {
   public getDroneSpot() {
     let transf = this.rootGroup.getComponent(Transform);
     
-    return transf.position.clone(); // TODO shouldn't be hangar's position?
+    return transf.position.clone().add(new Vector3(0, 1.6, 0)); // TODO shouldn't be hangar's position?
   }
 }

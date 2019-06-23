@@ -46,7 +46,7 @@ export class DroneSystem {
    */
   private updateSpawning(drone: Drone, transform: Transform, dt: number) {
     drone.spawnTimer += dt;
-    transform.position.y += dt; // rise at 1m/s TODO make better
+    transform.position.z -= dt; // rise at 1m/s TODO make better
     if (drone.spawnTimer > 4) {
       log("Drone transitioning to wandering!");
       drone.spawnTimer = 0;

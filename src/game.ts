@@ -32,7 +32,13 @@ let cyl = new CylinderShape();
 cyl.radiusTop = 1.0; // So it's not a cone.
 
 // NPCs.
-let droneMechanic = new NPC(new Transform({position: new Vector3(36, 2.93, 86)}), cyl, new AudioClip('sounds/ecogames_mechanic_pre.wav'), new AudioClip('sounds/ecogames_mechanic_post.wav'), globalGameState);
+let droneMechanic = new NPC(
+  new Transform({position: new Vector3(33, 2.93, 87)}),
+  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new AudioClip('sounds/ecogames_mechanic_pre.wav'),
+  new AudioClip('sounds/ecogames_mechanic_post.wav'),
+  globalGameState
+);
 
 // Drone hangar for spawning drones.
 let hangar = new DroneHangar(new Transform({
