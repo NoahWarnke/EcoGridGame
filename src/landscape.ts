@@ -22,7 +22,7 @@ export class Landscape {
       scale: new Vector3(6.804, 10, 8.164),
       rotation: Quaternion.Euler(0, 180, 0)
     }));
-    this.heightmap.addComponent(new GLTFShape('models/landscape/heightmap_nocollide.glb'));
+    this.heightmap.addComponent(new GLTFShape('models/landscape/terrain-smooth-separate.gltf'));
     engine.addEntity(this.heightmap);
   }
   

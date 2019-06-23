@@ -60,8 +60,6 @@ export class DroneHangar {
     droneSoundSource.playing = true;
     this.playerDrone.addComponent(droneSoundSource);
     
-    droneSoundSource.playing = true;
-    
     engine.addEntity(this.playerDrone);
   }
   

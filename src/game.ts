@@ -7,6 +7,7 @@ import {DroneSystem} from 'dronesystem';
 import GameBoard from 'gameboard';
 import {DroneHangar} from 'dronehangar';
 import {Landscape} from 'landscape';
+import {NPC} from 'npc';
 
 // This will be shared into any objects that need to know global info about game state.
 let globalGameState = {
@@ -22,15 +23,20 @@ engine.addSystem(new DroneSystem());
 // Non-interactive landscape elements.
 let landscape = new Landscape();
 
+// Temporary model for npcs, bins, etc.
+let cyl = new CylinderShape();
+cyl.radiusTop = 1.0; // So it's not a cone.
+
+// NPCs.
+let droneMechanic = new NPC(new Transform({position: new Vector3(36, 2.93, 86)}), cyl, new AudioClip('sounds/ecogames_mechanic_pre.wav'), new AudioClip('sounds/ecogames_mechanic_post.wav'), globalGameState);
+
 // Drone hangar for spawning drones.
 let hangar = new DroneHangar(new Transform({
   position: new Vector3(29, 2.93, 86),
   rotation: new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
 }));
 
-// Temporary model for bins etc.
-let cyl = new CylinderShape();
-cyl.radiusTop = 1.0; // So it's not a cone.
+
 
 let pieceModels: {[index: string]: [Shape, number]} = {
   'trashbag': [new GLTFShape('models/trash/landfill/bagtrash.gltf'), 0.25],
@@ -76,6 +82,7 @@ let gameSpecs: IGameBoardSpecification[] = [
     hangar
   },
   // 5x5 with two types of recycling and trash
+  /*
   {
     dimensions: {x: 5,y: 5},
     transform: new Transform({
@@ -100,9 +107,10 @@ let gameSpecs: IGameBoardSpecification[] = [
       }
     ],
     // Nature
-    donePieceShapes: [cyl],
+    donePieceShapes: [pieceModels.rock0, pieceModels.rock1, pieceModels.rock2],
     hangar
   }
+  */
 ];
 
 let gameBoards = [];
