@@ -1,3 +1,5 @@
+import {Carryable, CarryableSystem} from 'carryable';
+
 
 /**
  * Creates all the landscape items with no interactions.
@@ -13,6 +15,8 @@ export class Landscape {
     this.createPond();
     this.createBillboard();
     this.createTrees();
+    
+    engine.addSystem(new CarryableSystem()); // temp
   }
   
   private createHeightmap() {
@@ -89,12 +93,20 @@ export class Landscape {
     // Create tree entities!
     for (let i = 0; i < trees.length; i++) {
       let tree = new Entity();
-      tree.addComponent(new Transform({
+      let treeTransform = new Transform({
         position: trees[i].transform.position,
         rotation: trees[i].transform.rotation,
         scale: new Vector3(trees[i].type.scale, trees[i].type.scale, trees[i].type.scale)
-      }));
+      });
+      tree.addComponent(treeTransform);
       tree.addComponent(trees[i].type.model);
+      
+      // Temp
+      let treeCarry = new Carryable();
+      tree.addComponent(treeCarry);
+      tree.addComponent(new OnClick(() => {
+        treeCarry.toggleCarry(treeTransform);
+      }));
       
       this.trees.push(tree);
       engine.addEntity(tree);
