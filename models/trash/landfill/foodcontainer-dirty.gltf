@@ -20,9 +20,14 @@
             "mesh" : 0,
             "name" : "Cube",
             "scale" : [
-                -0.17655782401561737,
-                0.16972923278808594,
-                0.09767140448093414
+                -1.0402321815490723,
+                1,
+                0.5754542350769043
+            ],
+            "translation" : [
+                0,
+                0.9964320659637451,
+                0.14068704843521118
             ]
         },
         {
@@ -73,12 +78,10 @@
             "doubleSided" : true,
             "name" : "Material",
             "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    1,
-                    1,
-                    1,
-                    1
-                ],
+                "baseColorTexture" : {
+                    "index" : 0,
+                    "texCoord" : 0
+                },
                 "metallicFactor" : 0,
                 "roughnessFactor" : 0.4000000059604645
             }
@@ -98,6 +101,18 @@
                     "material" : 0
                 }
             ]
+        }
+    ],
+    "textures" : [
+        {
+            "source" : 0
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "dirty-food",
+            "uri" : "dirty-food.png"
         }
     ],
     "accessors" : [
@@ -161,7 +176,7 @@
     "buffers" : [
         {
             "byteLength" : 56132,
-            "uri" : "foodcontainer.bin"
+            "uri" : "foodcontainer-dirty.bin"
         }
     ]
 }

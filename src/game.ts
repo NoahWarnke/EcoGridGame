@@ -46,18 +46,26 @@ let hangar = new DroneHangar(new Transform({
   rotation: Quaternion.Euler(0, -90, 0) //Quaternion.Euler(4, -50, 7)// new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
 }));
 
-
-
 let pieceModels: {[index: string]: [Shape, number]} = {
+  // Landfill
   'trashbag': [new GLTFShape('models/trash/landfill/bagtrash.gltf'), 0.25],
   'chips': [new GLTFShape('models/trash/landfill/chips05.gltf'), 0.1],
+  'eggcarton': [new GLTFShape('models/trash/landfill/boxeggs2.gltf'), 1],
+  'foodcontainer': [new GLTFShape('models/trash/landfill/foodcontainer-dirty.gltf'), 0.2],
+  'coffee': [new GLTFShape('models/trash/landfill/coffe4.gltf'), 0.1],
+  // Recycling
   'bottle': [new GLTFShape('models/trash/recycling/bottle.gltf'), 0.1],
   'plate': [new GLTFShape('models/trash/recycling/plate.gltf'), 0.2],
   'water': [new GLTFShape('models/trash/recycling/water.gltf'), 0.1],
+  'soda': [new GLTFShape('models/trash/recycling/soda.gltf'), 0.5],
+  'tincan': [new GLTFShape('models/trash/recycling/tin-can.gltf'), 0.5],
+  // Compost
+  'apple': [new GLTFShape('models/trash/compost/apple.gltf'), 2],
+  'pizza': [new GLTFShape('models/trash/compost/pizza.gltf'), 1],
+  // Nature
   'rock0': [new GLTFShape('models/nature/rock.gltf'), 0.02],
   'rock1': [new GLTFShape('models/nature/rock1.gltf'), 0.02],
   'rock2': [new GLTFShape('models/nature/rock2.gltf'), 0.02],
-  //'rocks': [new GLTFShape('models/nature/rocks.gltf'), 0.01], // doesn't look quite right for a single piece.
 };
 
 let gameSpecs: IGameBoardSpecification[] = [
@@ -75,7 +83,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(-3, 0, 5),
             scale: new Vector3(1, 1.5, 1)
           }),
-          shapes: [pieceModels.trashbag] // can't define in place, for some reason.
+          shapes: [pieceModels.coffee] // can't define in place, for some reason.
       },
       // Recycling
       {
@@ -84,7 +92,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(0, 0, 5),
             scale: new Vector3(1, 1.5, 1)
           }),
-          shapes: [pieceModels.bottle]
+          shapes: [pieceModels.pizza]
       },
     ],
     // Nature

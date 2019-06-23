@@ -22,7 +22,7 @@ export class DroneHangar {
     
     this.hangar = new Entity();
     this.hangar.setParent(this.rootGroup);
-    this.hangar.addComponent(new GLTFShape('models/drone/DroneHut.glb'));
+    this.hangar.addComponent(new GLTFShape('models/drone/DroneHut-material-only.gltf'));
     this.hangar.addComponent(new Transform({scale: new Vector3(0.8, 0.8, 0.8)}));
     
     // Enable animations of hangar.
@@ -30,7 +30,7 @@ export class DroneHangar {
     this.hangar.addComponent(this.hangarAnimator);
     
     // Twirling radar animation
-    let radarSpinClip = new AnimationState("Cylinder.001Action.001");
+    let radarSpinClip = new AnimationState("radar-rotate");
     this.hangarAnimator.addClip(radarSpinClip);
     radarSpinClip.play();
     
@@ -80,8 +80,9 @@ export class DroneHangar {
   }
   
   public playLaunchAnimation() {
-    let doorOpenClip = new AnimationState("Cube.001Action");
+    let doorOpenClip = new AnimationState("open-door");
     this.hangarAnimator.addClip(doorOpenClip);
+    doorOpenClip.looping = false;
     doorOpenClip.play();
   }
   

@@ -72,6 +72,34 @@ export class Landscape {
   }
   
   private createTrees() {
+    this.trees = [];
+    
+    // One entry per type of tree (or other natural item).
+    let treeTypes = {
+      dead: {model: new GLTFShape('models/landscape/Tree2.glb'), scale: 0.1},
+      bushy: {model: new GLTFShape('models/landscape/Tree3.glb'), scale: 0.1}
+    };
+    
+    // One entry per actual instance of a tree.
+    let trees = [
+      {transform: {position: new Vector3(40, 3, 40), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bushy},
+      {transform: {position: new Vector3(60, 3, 40), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.dead}
+    ]
+    
+    // Create tree entities!
+    for (let i = 0; i < trees.length; i++) {
+      let tree = new Entity();
+      tree.addComponent(new Transform({
+        position: trees[i].transform.position,
+        rotation: trees[i].transform.rotation,
+        scale: new Vector3(trees[i].type.scale, trees[i].type.scale, trees[i].type.scale)
+      }));
+      tree.addComponent(trees[i].type.model);
+      
+      this.trees.push(tree);
+      engine.addEntity(tree);
+    }
+    
     
   }
 }
