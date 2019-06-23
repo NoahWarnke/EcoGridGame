@@ -9,6 +9,10 @@ import {DroneHangar} from 'dronehangar';
 import {Landscape} from 'landscape';
 import {NPC} from 'npc';
 
+// Temporary.
+import {Carryable, CarryableSystem} from 'carryable';
+engine.addSystem(new CarryableSystem());
+
 // This will be shared into any objects that need to know global info about game state.
 let globalGameState = {
   totalGames: 0,
@@ -32,8 +36,8 @@ let droneMechanic = new NPC(new Transform({position: new Vector3(36, 2.93, 86)})
 
 // Drone hangar for spawning drones.
 let hangar = new DroneHangar(new Transform({
-  position: new Vector3(29, 2.93, 86),
-  rotation: new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
+  position: new Vector3(38, 2.9, 87),
+  rotation: Quaternion.Euler(0, -90, 0) //Quaternion.Euler(4, -50, 7)// new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
 }));
 
 
@@ -118,6 +122,19 @@ for (let i = 0; i < gameSpecs.length; i++) {
   gameBoards.push(new GameBoard(gameSpecs[i], globalGameState));
 }
 globalGameState.totalGames = gameSpecs.length;
+
+
+/*
+let all = engine.getComponentGroup(Transform);
+
+for (let entity of all.entities) {
+  let carryable = new Carryable();
+  entity.addComponent(carryable);
+  entity.addComponentOrReplace(new OnClick(() => {
+    carryable.toggleCarry(entity.getComponent(Transform));
+  }));
+}
+*/
 
 /*
 

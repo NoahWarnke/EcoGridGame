@@ -20,8 +20,8 @@ export class DroneHangar {
     
     let dummyHangar = new Entity();
     dummyHangar.setParent(this.rootGroup);
-    dummyHangar.addComponent(new BoxShape());
-    dummyHangar.addComponent(new Transform({position: new Vector3(0, 2.5, 0), scale: new Vector3(4, 5, 8)}));
+    dummyHangar.addComponent(new GLTFShape('models/drone/DroneHut.glb'));
+    dummyHangar.addComponent(new Transform({scale: new Vector3(0.8, 0.8, 0.8)}));
     
     // When drone hangar is clicked, make it spawn a drone.
     dummyHangar.addComponent(new OnClick(() => {

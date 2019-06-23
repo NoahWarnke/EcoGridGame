@@ -11,6 +11,7 @@ export class Landscape {
   constructor() {
     this.createHeightmap();
     this.createPond();
+    this.createBillboard();
     this.createTrees();
   }
   
@@ -42,6 +43,32 @@ export class Landscape {
     lightblue.hasAlpha = true;
     this.pond.addComponent(lightblue);
     engine.addEntity(this.pond);
+  }
+  
+  private createBillboard() {
+    let billboard = new Entity();
+    billboard.addComponent(new BoxShape());
+    billboard.addComponent(new Transform({
+      position: new Vector3(69, 6.3, 85),
+      rotation: Quaternion.Euler(0, 45, 0),
+      scale: new Vector3(8, 4, 0.1)
+    }));
+    let mat = new Material();
+    mat.albedoColor = Color3.Black();
+    billboard.addComponent(mat);
+    
+    let message = new Entity();
+    message.addComponent(new PlaneShape());
+    message.addComponent(new Transform({
+      position: new Vector3(0, 0, 2),
+      scale: new Vector3(0.975, -0.95, 1)
+    }));
+    let billMat = new Material();
+    billMat.albedoTexture = new Texture('textures/ecogames_billboard.png');
+    message.addComponent(billMat);
+    message.setParent(billboard);
+    
+    engine.addEntity(billboard);
   }
   
   private createTrees() {
