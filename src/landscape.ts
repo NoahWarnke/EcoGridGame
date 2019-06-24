@@ -138,7 +138,7 @@ export class Landscape {
       {transform: {position: new Vector3(69.5, 3.14, 11.1), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
       {transform: {position: new Vector3(65.09, 7.50, 79.98), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
       {transform: {position: new Vector3(16.40, -0.43, 10.27), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
-      {transform: {position: new Vector3(14.01, -1.11, 6.09), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
+      {transform: {position: new Vector3(72.70, 0.99, 43.58), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
       {transform: {position: new Vector3(31.47, 13.01, 35.91), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
       {transform: {position: new Vector3(9.74, 1.62, 23.74), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
 
@@ -169,14 +169,12 @@ export class Landscape {
       {transform: {position: new Vector3(13.14, 5.58, 66.09), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(16.08, 4.02, 63.76), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
 
-
       {transform: {position: new Vector3(72.13, -0.14, 92.47), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(74.91, 0, 85), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(74.91, 0, 86), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower4},
       {transform: {position: new Vector3(77.19, -0.05, 87.11), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush2},
       {transform: {position: new Vector3(74.34, 0.04, 90.76), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush3},
       {transform: {position: new Vector3(69.92, -1.43, 92.15), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bush2},
-
 
       {transform: {position: new Vector3(22.10, -0.47, 3.10), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
       {transform: {position: new Vector3(18.32, -0.47, 1.97), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
