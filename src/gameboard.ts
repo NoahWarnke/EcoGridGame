@@ -24,6 +24,8 @@ export default class GameBoard {
   private gameGroup: Entity;
   private pieceSet: Entity;
   
+  private audioSources: {[index: string]: AudioSource};
+  
   /**
    * Construct a new GameBoard from the given GameBoardSpec.
    */
@@ -72,6 +74,29 @@ export default class GameBoard {
       bin.setParent(this.gameGroup);
     }
     
+    // Various sounds associated with game.
+    let audioSrcs = {
+      vacuum: 'sounds/ecogames_vacuum.mp3',
+      winBoard: 'sounds/ecogames_finished_board.mp3',
+      winGame: 'sounds/ecogames_finished_everything.mp3',
+      slide0: 'sounds/ecogames_swoosh1.mp3',
+      slide1: 'sounds/ecogames_swoosh2.mp3'
+    }
+    
+    // Set up clips, sources, entities for sounds.
+    this.audioSources = {};
+    for (let srcName in audioSrcs) {
+      log(srcName);
+      let entity = new Entity();
+      let clip = new AudioClip(audioSrcs[srcName]);
+      let audioSource = new AudioSource(clip);
+      audioSource.playing = false;
+      this.audioSources[srcName] = audioSource;
+      entity.addComponent(audioSource);
+      entity.setParent(this.gameGroup);
+    }
+    log (this.audioSources);
+    
     this.animating = false;
   }
   
@@ -106,8 +131,6 @@ export default class GameBoard {
         let pieceType = this.pieceTypes[type - 1];
         let index = Math.floor(Math.random() * pieceType.shapes.length);
         let whichShape = pieceType.shapes[index];
-        log(pieceType.shapes);
-        log(index + ', ' + pieceType.shapes + ', ' + pieceType.shapes.length + ', ' + whichShape);
         ent.addComponent(whichShape[0]);
         
         // Position the piece on the board.
@@ -165,6 +188,9 @@ export default class GameBoard {
     // Lock game until animations are done.
     this.animating = true;
     
+    // Play slide sound.
+    this.audioSources[Math.random() > 0.5 ? "slide0" : "slide1"].playOnce();
+    
     // Slide the pieces to their new spots.
     let slides = [];
     for (let [x, y, newX, newY] of slidePairs) {
@@ -178,6 +204,7 @@ export default class GameBoard {
       }
     }
     await Promise.all(slides);
+    
     log('Slides done!');
     
     // See if we have any 2x2 squares generated from the slide.
@@ -230,11 +257,11 @@ export default class GameBoard {
       
       // Convert CG to worldspace from gameboard space.
       let gameTransf = this.gameGroup.getComponent(Transform);
-      let gamePos = gameTransf.position;
-      let gameRot = gameTransf.rotation;
-      let piecesPos = this.pieceSet.getComponent(Transform).position; // no rotation on that.
+      let gamePos = gameTransf.position.clone();
+      let gameRot = gameTransf.rotation.clone();
+      let piecesPos = this.pieceSet.getComponent(Transform).position.clone(); // no rotation on that.
       
-      let droneMouthWorldspace = new Vector3(gamePos.x, gamePos.y, gamePos.z);
+      let droneMouthWorldspace = gamePos.clone();
       droneMouthWorldspace.addInPlace(piecesPos.rotate(gameRot));
       droneMouthWorldspace.addInPlace(cg); // again, no rotation on pieceSet.
       
@@ -242,13 +269,16 @@ export default class GameBoard {
       droneMouthWorldspace.y += 1; // drone 1m up?
       
       // Convert worldspace CG+height back to gameboard space
-      let droneMouthGamespace = new Vector3(droneMouthWorldspace.x, droneMouthWorldspace.y, droneMouthWorldspace.z);
+      let droneMouthGamespace = droneMouthWorldspace.clone();
       droneMouthGamespace.subtractInPlace(gamePos);
       droneMouthGamespace.subtractInPlace(piecesPos.rotate(gameRot));
       
       // Send drone to worldspace CG+height.
       await drone.goto(droneMouthWorldspace);
       log('Drone hovering over pieces of type ' + type + ' to suck them up!');
+      
+      // Play sucking sound.
+      this.audioSources.vacuum.playOnce();
       
       // TODO change blinking to suck-to-dronemouth anims.
       let blinkPromises = [];
@@ -268,6 +298,8 @@ export default class GameBoard {
       // Send drone there next.
       await drone.goto(binWorldspace);
       log('Drone hovering over bin for type ' + type + 'to dump the pieces!');
+      
+      // TODO splat sound etc.
       
       drone.resumeWander();
       log('Drone done with trash duty; resuming random wander.');
@@ -296,14 +328,20 @@ export default class GameBoard {
       log("Woo congrats, you finished the board!");
       this.globalGameState.finishedGames++; // let global state know.
       
-      
       if (this.globalGameState.finishedGames === this.globalGameState.totalGames) {
         let drone = this.hangar.playerDrone.getComponent(Drone);
         log("Wow, all boards complete! You win!!!");
+        
+        // You win the whole game sound!
+        this.audioSources.winGame.playOnce();
+        
         await drone.goto(this.hangar.getDroneSpot());
         await drone.despawn();
       }
+      else {
+        // You win this board sound (have to swap out audio source which drone vacuum sound already occupied)
+        this.audioSources.winBoard.playOnce();
+      }
     }
-
   }
 }

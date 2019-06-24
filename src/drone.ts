@@ -83,13 +83,16 @@ export class Drone {
    */
   public chooseRandomTarget() {
     
-    let random = new Vector3(
-      Math.random() - 0.5,
-      Math.random() * 0.1 + 0.05, // always over y=0.
-      Math.random() - 0.5
-    );
-    random = random.normalize().scale(Math.random() * 5 + 5); // Go between 5 and 10m away.
-    this.targetPos = random.add(Camera.instance.position);
+    do {
+      let random = new Vector3(
+        Math.random() - 0.5,
+        Math.random() * 0.1 + 0.05, // always over y=0.
+        Math.random() - 0.5
+      );
+      random = random.normalize().scale(Math.random() * 5 + 5); // Go between 5 and 10m away.
+      this.targetPos = random.add(Camera.instance.position);
+    } while (this.targetPos.x < 1 || this.targetPos.x > 79 || this.targetPos.z < 1 || this.targetPos.z > 95);
+    
   }
   
   public despawn(): Promise<void> {

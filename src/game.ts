@@ -167,14 +167,14 @@ let gameSpecs: IGameBoardSpecification[] = [
   {
     dimensions: {x: 6, y: 6},
     transform: new Transform({
-      position: new Vector3(10.85, 3.05, 17.63)
+      position: new Vector3(10.85, 2.95, 17.63)
     }),
     pieceTypes: [
       // Landfill
       {
           receptacleShape: cyl,
           receptacleTransform: new Transform({
-            position: new Vector3(5, 0, 5)
+            position: new Vector3(6, 0, 6)
           }),
           shapes: [pieceModels.foodcontainer, pieceModels.trashbag, pieceModels.coffee]
       },
@@ -201,100 +201,9 @@ let gameSpecs: IGameBoardSpecification[] = [
   }
 ];
 
+// Instantiate boards with the list of specs!
 let gameBoards = [];
 for (let i = 0; i < gameSpecs.length; i++) {
   gameBoards.push(new GameBoard(gameSpecs[i], globalGameState));
 }
 globalGameState.totalGames = gameSpecs.length;
-
-
-/*
-let all = engine.getComponentGroup(Transform);
-
-for (let entity of all.entities) {
-  let carryable = new Carryable();
-  entity.addComponent(carryable);
-  entity.addComponentOrReplace(new OnClick(() => {
-    carryable.toggleCarry(entity.getComponent(Transform));
-  }));
-}
-*/
-
-/*
-
-let gameBoardMedium = new GameBoard();
-
-// 6x6 with 2x trash, recycling, compost
-let gameBoardMedHard = new GameBoard({
-  dimensions: {x: 6, y: 6},
-  transform: new Transform({
-    position: new Vector3(16, 0, 12)
-  }),
-  pieceTypes: [
-    // Landfill
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(-3, 0, 0)
-        }),
-        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')]
-    },
-    // Recycling
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(0, 0, 3)
-        }),
-        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf')]
-    },
-    // Compost
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(3, 0, 0)
-        }),
-        shapes: [new ConeShape(), new BoxShape()]
-    }
-  ],
-  // Nature
-  donePieceShapes: [cyl],
-  hangar
-});
-
-// 8x8 with 3x(eventually) trash, recycling, Compost
-let gameBoardHard = new GameBoard({
-  dimensions: {x: 6,y: 6},
-  transform: new Transform({
-    position: new Vector3(16, 0, 4)
-  }),
-  pieceTypes: [
-    // Landfill
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(-3, 0, 0)
-        }),
-        shapes: [new GLTFShape('models/chips05.gltf'), new GLTFShape('models/bagtrash.gltf')] // plus coffee when it works
-    },
-    // Recycling
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(0, 0, 3)
-        }),
-        shapes: [new GLTFShape('models/bottle.gltf'), new GLTFShape('models/plate.gltf'), new GLTFShape('models/water.gltf')]
-    },
-    // Compost
-    {
-        receptacleShape: new CylinderShape(),
-        receptacleTransform: new Transform({
-          position: new Vector3(3, 0, 0)
-        }),
-        shapes: [new ConeShape(), new BoxShape(), cyl]
-    }
-  ],
-  // Nature
-  donePieceShapes: [cyl],
-  hangar
-});
-*/
