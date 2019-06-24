@@ -57,7 +57,7 @@ export default class GameBoard {
     this.pieceSet.addComponent(new Transform({
       position: new Vector3(
         -(this.gameState.getWidth() - 1) / 2,
-        0.25,
+        0.0,
         -(this.gameState.getHeight() - 1) / 2)
     }));
     
@@ -104,7 +104,10 @@ export default class GameBoard {
         
         // Give the piece the correct shape.
         let pieceType = this.pieceTypes[type - 1];
-        let whichShape = pieceType.shapes[Math.floor(Math.random() * pieceType.shapes.length)];
+        let index = Math.floor(Math.random() * pieceType.shapes.length);
+        let whichShape = pieceType.shapes[index];
+        log(pieceType.shapes);
+        log(index + ', ' + pieceType.shapes + ', ' + pieceType.shapes.length + ', ' + whichShape);
         ent.addComponent(whichShape[0]);
         
         // Position the piece on the board.

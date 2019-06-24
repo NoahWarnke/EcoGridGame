@@ -73,26 +73,25 @@ let gameSpecs: IGameBoardSpecification[] = [
   {
     dimensions: {x: 4, y: 4},
     transform: new Transform({
-      position: new Vector3(21, 3, 86)
+      position: new Vector3(24.81, 3.05, 85.193),
+      rotation: Quaternion.Euler(3, 0, 0)
     }),
     pieceTypes: [
       // Landfill
       {
           receptacleShape: cyl,
           receptacleTransform: new Transform({
-            position: new Vector3(-3, 0, 5),
-            scale: new Vector3(1, 1.5, 1)
+            position: new Vector3(-4, 0, -1),
           }),
-          shapes: [pieceModels.coffee] // can't define in place, for some reason.
+          shapes: [pieceModels.trashbag] // can't define in place, for some reason.
       },
       // Recycling
       {
           receptacleShape: cyl,
           receptacleTransform: new Transform({
-            position: new Vector3(0, 0, 5),
-            scale: new Vector3(1, 1.5, 1)
+            position: new Vector3(-4, 0, 1),
           }),
-          shapes: [pieceModels.pizza]
+          shapes: [pieceModels.soda]
       },
     ],
     // Nature
@@ -100,26 +99,26 @@ let gameSpecs: IGameBoardSpecification[] = [
     hangar
   },
   // 5x5 with two types of recycling and trash
-  /*
   {
     dimensions: {x: 5,y: 5},
     transform: new Transform({
-      position: new Vector3(4, 0, 4)
+      position: new Vector3(44.61, 3.09, 31.99),
+      rotation: Quaternion.Euler(0, 0, -2)
     }),
     pieceTypes: [
       // Landfill
       {
-          receptacleShape: new CylinderShape(),
+          receptacleShape: cyl,
           receptacleTransform: new Transform({
-            position: new Vector3(-3, 0, 0)
+            position: new Vector3(-4, 0, 0)
           }),
           shapes: [pieceModels.chips, pieceModels.trashbag]
       },
       // Recycling
       {
-          receptacleShape: new CylinderShape(),
+          receptacleShape: cyl,
           receptacleTransform: new Transform({
-            position: new Vector3(0, 0, 3)
+            position: new Vector3(0, 0, 4)
           }),
           shapes: [pieceModels.bottle, pieceModels.plate]
       }
@@ -127,8 +126,79 @@ let gameSpecs: IGameBoardSpecification[] = [
     // Nature
     donePieceShapes: [pieceModels.rock0, pieceModels.rock1, pieceModels.rock2],
     hangar
+  },
+  // 5x5 with 2x of each trash type
+  {
+    dimensions: {x: 5, y: 5},
+    transform: new Transform({
+      position: new Vector3(77.13, 0.1, 2.57)
+    }),
+    pieceTypes: [
+      // Landfill
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(-3.5, 0, -1)
+          }),
+          shapes: [pieceModels.foodcontainer, pieceModels.eggcarton]
+      },
+      // Recycling
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(-3.5, 0, 1)
+          }),
+          shapes: [pieceModels.tincan, pieceModels.soda]
+      },
+      // Compost
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(0, 0, 3)
+          }),
+          shapes: [pieceModels.pizza, pieceModels.apple]
+      }
+    ],
+    // Nature
+    donePieceShapes: [pieceModels.rock0, pieceModels.rock1, pieceModels.rock2],
+    hangar
+  },
+  // 6x6 with 2-3x of each trash type
+  {
+    dimensions: {x: 6, y: 6},
+    transform: new Transform({
+      position: new Vector3(10.85, 3.05, 17.63)
+    }),
+    pieceTypes: [
+      // Landfill
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(5, 0, 5)
+          }),
+          shapes: [pieceModels.foodcontainer, pieceModels.trashbag, pieceModels.coffee]
+      },
+      // Recycling
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(0, 0, 4.4)
+          }),
+          shapes: [pieceModels.tincan, pieceModels.water, pieceModels.bottle]
+      },
+      // Compost
+      {
+          receptacleShape: cyl,
+          receptacleTransform: new Transform({
+            position: new Vector3(4.4, 0, -1)
+          }),
+          shapes: [pieceModels.pizza, pieceModels.apple]
+      }
+    ],
+    // Nature
+    donePieceShapes: [pieceModels.rock0, pieceModels.rock1, pieceModels.rock2],
+    hangar
   }
-  */
 ];
 
 let gameBoards = [];
