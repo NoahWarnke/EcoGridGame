@@ -27,9 +27,7 @@ engine.addSystem(new DroneSystem());
 // Non-interactive landscape elements.
 let landscape = new Landscape();
 
-// Temporary model for npcs, bins, etc.
-let cyl = new CylinderShape();
-cyl.radiusTop = 1.0; // So it's not a cone.
+
 
 // NPCs.
 let droneMechanic = new NPC(
@@ -68,6 +66,10 @@ let pieceModels: {[index: string]: [Shape, number]} = {
   'rock2': [new GLTFShape('models/nature/rock2.gltf'), 0.02],
 };
 
+let recycleBin = new GLTFShape('models/trash/bins/recycle-bin.gltf');
+let landfillBin = new GLTFShape('models/trash/bins/trash-bin.gltf');
+let compostBin = new GLTFShape('models/trash/bins/compost-bin.gltf');
+
 let gameSpecs: IGameBoardSpecification[] = [
   // 4x4 with just trash bag versus bottle.
   {
@@ -79,17 +81,19 @@ let gameSpecs: IGameBoardSpecification[] = [
     pieceTypes: [
       // Landfill
       {
-          receptacleShape: cyl,
+          receptacleShape: landfillBin,
           receptacleTransform: new Transform({
             position: new Vector3(-4, 0, -1),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.trashbag] // can't define in place, for some reason.
       },
       // Recycling
       {
-          receptacleShape: cyl,
+          receptacleShape: recycleBin,
           receptacleTransform: new Transform({
             position: new Vector3(-4, 0, 1),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.soda]
       },
@@ -108,17 +112,19 @@ let gameSpecs: IGameBoardSpecification[] = [
     pieceTypes: [
       // Landfill
       {
-          receptacleShape: cyl,
+          receptacleShape: landfillBin,
           receptacleTransform: new Transform({
-            position: new Vector3(-4, 0, 0)
+            position: new Vector3(-4, 0, 0),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.chips, pieceModels.trashbag]
       },
       // Recycling
       {
-          receptacleShape: cyl,
+          receptacleShape: recycleBin,
           receptacleTransform: new Transform({
-            position: new Vector3(0, 0, 4)
+            position: new Vector3(0, 0, 4),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.bottle, pieceModels.plate]
       }
@@ -136,25 +142,28 @@ let gameSpecs: IGameBoardSpecification[] = [
     pieceTypes: [
       // Landfill
       {
-          receptacleShape: cyl,
+          receptacleShape: landfillBin,
           receptacleTransform: new Transform({
-            position: new Vector3(-3.5, 0, -1)
+            position: new Vector3(-3.5, 0, -1),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.foodcontainer, pieceModels.eggcarton]
       },
       // Recycling
       {
-          receptacleShape: cyl,
+          receptacleShape: recycleBin,
           receptacleTransform: new Transform({
-            position: new Vector3(-3.5, 0, 1)
+            position: new Vector3(-3.5, 0, 1),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.tincan, pieceModels.soda]
       },
       // Compost
       {
-          receptacleShape: cyl,
+          receptacleShape: compostBin,
           receptacleTransform: new Transform({
-            position: new Vector3(0, 0, 3)
+            position: new Vector3(0, 0, 3),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.pizza, pieceModels.apple]
       }
@@ -172,25 +181,28 @@ let gameSpecs: IGameBoardSpecification[] = [
     pieceTypes: [
       // Landfill
       {
-          receptacleShape: cyl,
+          receptacleShape: landfillBin,
           receptacleTransform: new Transform({
-            position: new Vector3(6, 0, 6)
+            position: new Vector3(6, 0, 6),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.foodcontainer, pieceModels.trashbag, pieceModels.coffee]
       },
       // Recycling
       {
-          receptacleShape: cyl,
+          receptacleShape: recycleBin,
           receptacleTransform: new Transform({
-            position: new Vector3(0, 0, 4.4)
+            position: new Vector3(0, 0, 4.4),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.tincan, pieceModels.water, pieceModels.bottle]
       },
       // Compost
       {
-          receptacleShape: cyl,
+          receptacleShape: compostBin,
           receptacleTransform: new Transform({
-            position: new Vector3(4.4, 0, -1)
+            position: new Vector3(4.4, 0, -1),
+            scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.pizza, pieceModels.apple]
       }
