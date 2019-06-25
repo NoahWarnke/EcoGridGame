@@ -155,7 +155,6 @@ export default class GameBoard {
     
     // Make sure player has a drone.
     if (!this.hangar.playerHasDrone) {
-      // TODO inform player they need to get a drone, somehow.
       this.audioSources.needdrone.playing = false;
       this.audioSources.needdrone.playOnce();
       return;
