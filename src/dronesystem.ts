@@ -16,6 +16,12 @@ export class DroneSystem {
       let drone = entity.getComponent(Drone);
       let transform = entity.getComponent(Transform);
       
+      if (drone.soundTimer >= 0) {
+        entity.getComponent(AudioSource).playOnce();
+        drone.soundTimer = -14.928; // length of drone sound.
+      }
+      drone.soundTimer += dt;
+      
       switch(drone.state) {
         case "spawning": {
           this.updateSpawning(drone, transform, dt);

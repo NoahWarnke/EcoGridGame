@@ -126,10 +126,10 @@ export class DroneHangar {
     // Add a sound to the drone!
     let droneSoundClip = new AudioClip('sounds/dronesound.mp3');
     let droneSoundSource = new AudioSource(droneSoundClip);
-    droneSoundSource.loop = true;
+    droneSoundSource.loop = true; // is broken
     droneSoundSource.playing = true;
-    droneSoundSource.volume = 0.3;
-    this.playerDrone.addComponent(droneSoundSource);
+    droneSoundSource.volume = 0.1;
+    this.playerDrone.addComponent(droneSoundSource); // we repeatedly play the sound source in the DroneSystem.
     
     engine.addEntity(this.playerDrone);
     

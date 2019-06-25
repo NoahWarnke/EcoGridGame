@@ -291,8 +291,8 @@ export default class GameBoard {
       log('Blinking done.');
       
       // Calculate worldspace coords of appropriate bin.
-      let binWorldspace = new Vector3(gamePos.x, gamePos.y, gamePos.z);
-      binWorldspace.addInPlace(this.pieceTypes[type - 1].receptacleTransform.position.rotate(gameRot));
+      let binWorldspace = gamePos.clone();
+      binWorldspace.addInPlace(this.pieceTypes[type - 1].receptacleTransform.position.clone().rotate(gameRot));
       binWorldspace.y += 2; // Make drone hover above it, not in it :P
       
       // Send drone there next.

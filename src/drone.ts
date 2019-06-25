@@ -28,6 +28,8 @@ export class Drone {
   
   public resolveDespawn: Function;
   
+  public soundTimer: number;
+  
   /**
    * Construct a new Drone.
    */
@@ -46,6 +48,8 @@ export class Drone {
     this.hoverHeight = 0;
     
     this.gotoResolved = false;
+    
+    this.soundTimer = 0;
   }
   
   /**
