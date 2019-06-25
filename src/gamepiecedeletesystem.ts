@@ -16,21 +16,18 @@ export default class GamePieceDeleteSystem implements ISystem {
       
       piece.deleteTime += dt;
       
-      if (piece.deleteTime > 1.5) {
+      if (piece.deleteTime > 1) {
+        entity.getComponent(Transform).position.set(piece.x, 0, piece.y);
         piece.resolveDeletion();
         continue;
       }
       
-      // Blink twice every second.
-      let blink = Math.floor(piece.deleteTime * 4) % 2 === 0;
-      if (blink && !piece.deleteBlink) {
-        entity.getComponent(Transform).scale.set(0.2, 0.2, 0.2);
-        piece.deleteBlink = true;
-      }
-      else if (!blink && piece.deleteBlink) {
-        entity.getComponent(Transform).scale.set(0.3, 0.3, 0.3);
-        piece.deleteBlink = false;
-      }
+      entity.getComponent(Transform).position.set(
+        (piece.deleteCoord.x - piece.x) / 1 * piece.deleteTime + piece.x,
+        (piece.deleteCoord.y) / 1 * piece.deleteTime,
+        (piece.deleteCoord.z - piece.y) / 1 * piece.deleteTime + piece.y
+      );
+      
     }
   }
 }

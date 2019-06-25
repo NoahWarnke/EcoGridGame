@@ -19,7 +19,7 @@ export default class GamePiece {
   // Stuff for animating the piece deletion/replacement.
   public deleting: boolean;
   public deleteTime: number; // seconds since delete anim started.
-  public deleteBlink: boolean;
+  public deleteCoord: Vector3;
   public resolveDeletion: Function;
   
   constructor(x: number, y: number, type: number, entity: Entity) {
@@ -36,7 +36,7 @@ export default class GamePiece {
     
     this.deleting = false;
     this.deleteTime = 0;
-    this.deleteBlink = false;
+    this.deleteCoord = undefined;
     this.resolveDeletion = undefined;
   }
   
@@ -66,15 +66,16 @@ export default class GamePiece {
    * Start the deletion animation.
    * @returns a Promise that resolves when the slide finishes.
    */
-  showDeletion(): Promise<void> {
+  showDeletion(gameSpaceCoord: Vector3): Promise<void> {
     this.deleting = true;
+    this.deleteCoord = gameSpaceCoord;
     
     return new Promise((resolve, reject) => {
-      this.entity.getComponent(Transform).scale.set(1, 1, 1); // Make sure we're at normal scale.
       this.resolveDeletion = () => {
         this.resolveDeletion = undefined;
         this.deleting = false;
         this.deleteTime = 0;
+        this.deleteCoord = undefined;
         resolve();
       }
     })

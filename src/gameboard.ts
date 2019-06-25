@@ -281,14 +281,14 @@ export default class GameBoard {
       this.audioSources.vacuum.playOnce();
       
       // TODO change blinking to suck-to-dronemouth anims.
-      let blinkPromises = [];
+      let suckPromises = [];
       for (let piece of deletedPiecesByType[type]) {
-        blinkPromises.push(piece.showDeletion());
+        suckPromises.push(piece.showDeletion(droneMouthGamespace));
       }
       
-      log('Blinking ' + blinkPromises.length + ' of type ' + type);
-      await Promise.all(blinkPromises);
-      log('Blinking done.');
+      log('Sucking ' + suckPromises.length + ' of type ' + type);
+      await Promise.all(suckPromises);
+      log('sucking done.');
       
       // Calculate worldspace coords of appropriate bin.
       let binWorldspace = gamePos.clone();
