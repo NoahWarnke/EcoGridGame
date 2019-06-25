@@ -1,6 +1,6 @@
 {
     "asset" : {
-        "generator" : "Khronos glTF Blender I/O v0.9.24",
+        "generator" : "Khronos Blender glTF 2.0 I/O",
         "version" : "2.0"
     },
     "scene" : 0,
@@ -27,7 +27,7 @@
             "translation" : [
                 4.076245307922363,
                 5.903861999511719,
-                -1.0054539442062378
+                0.17671442031860352
             ]
         },
         {
@@ -39,22 +39,22 @@
                 0.7804827094078064
             ],
             "translation" : [
-                14.244029998779297,
-                13.910992622375488,
-                13.146112442016602
+                7.358891487121582,
+                5.627910614013672,
+                6.925790786743164
             ]
         },
         {
             "mesh" : 0,
-            "name" : "Cylinder",
+            "name" : "Cylinder.001",
             "scale" : [
-                0.978893518447876,
-                0.707776665687561,
-                0.978893518447876
+                1.0885100364685059,
+                0.057520072907209396,
+                1.0885100364685059
             ],
             "translation" : [
                 0,
-                3.0620527267456055,
+                1.7226296663284302,
                 0
             ]
         },
@@ -63,64 +63,70 @@
                 2
             ],
             "mesh" : 1,
-            "name" : "Circle",
+            "name" : "Cylinder",
+            "rotation" : [
+                -0.46554410457611084,
+                -0.11202308535575867,
+                0.4813266694545746,
+                0.7341962456703186
+            ],
             "scale" : [
-                0.30288630723953247,
-                0.30288630723953247,
-                0.30288630723953247
+                0.12464989721775055,
+                0.12464991211891174,
+                0.12464989721775055
+            ],
+            "translation" : [
+                0.037658270448446274,
+                0.1150500699877739,
+                0.05689515918493271
             ]
         },
         {
-            "name" : "Empty",
+            "name" : "Light.001",
             "rotation" : [
-                0.7070879936218262,
-                -0.005150539334863424,
-                -0.005150540731847286,
-                0.707088053226471
-            ],
-            "scale" : [
-                9.841601371765137,
-                9.841601371765137,
-                9.841601371765137
+                0.16907575726509094,
+                0.7558803558349609,
+                -0.27217137813568115,
+                0.570947527885437
             ],
             "translation" : [
-                0,
-                4.700000286102295,
-                0
+                -8.782726287841797,
+                3.4712612628936768,
+                5.206598281860352
             ]
         }
     ],
     "materials" : [
         {
-            "doubleSided" : true,
-            "name" : "Material.003",
+            "name" : "Material.002",
             "pbrMetallicRoughness" : {
-                "baseColorTexture" : {
-                    "index" : 0,
-                    "texCoord" : 0
-                },
+                "baseColorFactor" : [
+                    0.0908379852771759,
+                    0.05492749810218811,
+                    0.032526783645153046,
+                    1
+                ],
                 "metallicFactor" : 0,
                 "roughnessFactor" : 0.5
             }
         },
         {
-            "doubleSided" : true,
-            "name" : "Material.002",
+            "name" : "Material",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0.8688864707946777,
-                    0.8688864707946777,
-                    0.8688864707946777,
+                    0.8970927596092224,
+                    0.8183081150054932,
+                    0.6669002175331116,
                     1
                 ],
-                "metallicFactor" : 1,
-                "roughnessFactor" : 0
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.4000000059604645
             }
         }
     ],
     "meshes" : [
         {
-            "name" : "Cylinder",
+            "name" : "Cylinder.001",
             "primitives" : [
                 {
                     "attributes" : {
@@ -134,7 +140,7 @@
             ]
         },
         {
-            "name" : "Circle",
+            "name" : "Cylinder",
             "primitives" : [
                 {
                     "attributes" : {
@@ -148,30 +154,18 @@
             ]
         }
     ],
-    "textures" : [
-        {
-            "source" : 0
-        }
-    ],
-    "images" : [
-        {
-            "mimeType" : "image/jpeg",
-            "name" : "texture_wine",
-            "uri" : "texture_wine.jpg"
-        }
-    ],
     "accessors" : [
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 156,
+            "count" : 480,
             "max" : [
-                0.9898214340209961,
                 1,
-                0.9594930410385132
+                5.175754070281982,
+                1
             ],
             "min" : [
-                -0.9898214936256409,
+                -1,
                 -1,
                 -1
             ],
@@ -180,102 +174,102 @@
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 156,
+            "count" : 480,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 156,
+            "count" : 480,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 264,
+            "count" : 828,
             "type" : "SCALAR"
         },
         {
             "bufferView" : 4,
             "componentType" : 5126,
-            "count" : 1556,
+            "count" : 200,
             "max" : [
-                0.938360869884491,
-                8.100000381469727,
-                0.9383607506752014
+                1,
+                1.7105681896209717,
+                1
             ],
             "min" : [
-                -0.9383608102798462,
-                0,
-                -0.938360869884491
+                -1,
+                -1,
+                -1
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 5,
             "componentType" : 5126,
-            "count" : 1556,
+            "count" : 200,
             "type" : "VEC3"
         },
         {
             "bufferView" : 6,
             "componentType" : 5126,
-            "count" : 1556,
+            "count" : 200,
             "type" : "VEC2"
         },
         {
             "bufferView" : 7,
             "componentType" : 5123,
-            "count" : 2586,
+            "count" : 372,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 1872,
+            "byteLength" : 5760,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 1872,
-            "byteOffset" : 1872
+            "byteLength" : 5760,
+            "byteOffset" : 5760
         },
         {
             "buffer" : 0,
-            "byteLength" : 1248,
-            "byteOffset" : 3744
+            "byteLength" : 3840,
+            "byteOffset" : 11520
         },
         {
             "buffer" : 0,
-            "byteLength" : 528,
-            "byteOffset" : 4992
+            "byteLength" : 1656,
+            "byteOffset" : 15360
         },
         {
             "buffer" : 0,
-            "byteLength" : 18672,
-            "byteOffset" : 5520
+            "byteLength" : 2400,
+            "byteOffset" : 17016
         },
         {
             "buffer" : 0,
-            "byteLength" : 18672,
-            "byteOffset" : 24192
+            "byteLength" : 2400,
+            "byteOffset" : 19416
         },
         {
             "buffer" : 0,
-            "byteLength" : 12448,
-            "byteOffset" : 42864
+            "byteLength" : 1600,
+            "byteOffset" : 21816
         },
         {
             "buffer" : 0,
-            "byteLength" : 5172,
-            "byteOffset" : 55312
+            "byteLength" : 744,
+            "byteOffset" : 23416
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 60484,
-            "uri" : "wine-glossy.bin"
+            "byteLength" : 24160,
+            "uri" : "coffe.bin"
         }
     ]
 }
