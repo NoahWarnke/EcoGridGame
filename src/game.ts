@@ -54,27 +54,47 @@ let hangar = new DroneHangar(new Transform({
   rotation: Quaternion.Euler(0, -90, 0) //Quaternion.Euler(4, -50, 7)// new Quaternion(0.0185, -0.7068, -0.0185, 0.70686)
 }));
 
+
 let pieceModels: {[index: string]: [Shape, number]} = {
   // Landfill
-  'trashbag': [new GLTFShape('models/trash/landfill/bagtrash.gltf'), 0.25],
-  'chips': [new GLTFShape('models/trash/landfill/chips05.gltf'), 0.1],
+  'trashbag': [new GLTFShape('models/trash/landfill/bag.gltf'), 0.7],
+  'chips': [new GLTFShape('models/trash/landfill/chips-orange.gltf'), 0.3],
   'eggcarton': [new GLTFShape('models/trash/landfill/boxeggs2.gltf'), 1],
   'foodcontainer': [new GLTFShape('models/trash/landfill/foodcontainer-dirty.gltf'), 0.2],
   'coffee': [new GLTFShape('models/trash/landfill/coffe4.gltf'), 0.1],
+  'chicken': [new GLTFShape('models/trash/landfill/chicken.gltf'), 0.5],
+  'cigarettes': [new GLTFShape('models/trash/landfill/cigarettes-on-the-ground.gltf'), 0.25],
+  'lightbulb': [new GLTFShape('models/trash/landfill/lightbulb.gltf'), 0.4],
   // Recycling
-  'bottle': [new GLTFShape('models/trash/recycling/bottle.gltf'), 0.1],
-  'plate': [new GLTFShape('models/trash/recycling/plate.gltf'), 0.2],
-  'water': [new GLTFShape('models/trash/recycling/water.gltf'), 0.1],
+  'bottle': [new GLTFShape('models/trash/recycling/bottle.gltf'), 0.2],
+  'plate': [new GLTFShape('models/trash/recycling/plate.gltf'), 0.25],
+  'water': [new GLTFShape('models/trash/recycling/water.gltf'), 0.4],
   'soda': [new GLTFShape('models/trash/recycling/soda.gltf'), 0.5],
   'tincan': [new GLTFShape('models/trash/recycling/tin-can.gltf'), 0.5],
+  'sugar': [new GLTFShape('models/trash/recycling/boxsugar.gltf'), 0.4],
+  'wine': [new GLTFShape('models/trash/recycling/wine-green.gltf'), 0.5],
+  'newspaper': [new GLTFShape('models/trash/recycling/newspaper-rolled.gltf'), 0.3],
   // Compost
   'apple': [new GLTFShape('models/trash/compost/apple.gltf'), 2],
   'pizza': [new GLTFShape('models/trash/compost/pizza.gltf'), 1],
+  'banana': [new GLTFShape('models/trash/compost/banana-clear.gltf'), 0.1],
   // Nature
   'rock0': [new GLTFShape('models/nature/rock.gltf'), 0.02],
   'rock1': [new GLTFShape('models/nature/rock1.gltf'), 0.02],
   'rock2': [new GLTFShape('models/nature/rock2.gltf'), 0.02],
 };
+/*
+let i = 0;
+for (let type in pieceModels) {
+  let entity = new Entity();
+  entity.addComponent(new Transform({
+    position: new Vector3((i++) * 2 + 2, 0, 8),
+    scale: new Vector3(pieceModels[type][1], pieceModels[type][1], pieceModels[type][1])
+  }));
+  entity.addComponent(pieceModels[type][0]);
+  engine.addEntity(entity);
+}
+*/
 
 let recycleBin = new GLTFShape('models/trash/bins/recycle-bin.gltf');
 let landfillBin = new GLTFShape('models/trash/bins/trash-bin.gltf');
@@ -127,7 +147,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(-4, 0, 0),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.chips, pieceModels.trashbag]
+          shapes: [pieceModels.chips, pieceModels.lightbulb]
       },
       // Recycling
       {
@@ -166,7 +186,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(-3.5, 0, 1),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.tincan, pieceModels.soda]
+          shapes: [pieceModels.tincan, pieceModels.water]
       },
       // Compost
       {
@@ -175,7 +195,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(0, 0, 3),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.pizza, pieceModels.apple]
+          shapes: [pieceModels.banana, pieceModels.apple]
       }
     ],
     // Nature
@@ -196,7 +216,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(6, 0, 6),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.foodcontainer, pieceModels.trashbag, pieceModels.coffee]
+          shapes: [pieceModels.chicken, pieceModels.cigarettes, pieceModels.coffee]
       },
       // Recycling
       {
@@ -205,7 +225,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(0, 0, 4.4),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.tincan, pieceModels.water, pieceModels.bottle]
+          shapes: [pieceModels.wine, pieceModels.newspaper, pieceModels.sugar]
       },
       // Compost
       {
@@ -214,7 +234,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(4.4, 0, -1),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.pizza, pieceModels.apple]
+          shapes: [pieceModels.pizza, pieceModels.apple, pieceModels.banana]
       }
     ],
     // Nature

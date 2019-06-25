@@ -134,7 +134,8 @@ export default class GameBoard {
         // Position the piece on the board.
         ent.addComponent(new Transform({
           position: new Vector3(x, 0, y),
-          scale: new Vector3(whichShape[1], whichShape[1], whichShape[1]) // Scale piece according to its piece type scale factor.
+          scale: new Vector3(whichShape[1], whichShape[1], whichShape[1]), // Scale piece according to its piece type scale factor.
+          rotation: Quaternion.Euler(0, Math.random() * 360, 0)
         }));
         
         // Make sure the piece is clickable!

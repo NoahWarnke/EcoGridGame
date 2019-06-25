@@ -10,34 +10,13 @@
             "nodes" : [
                 0,
                 1,
-                2,
-                3
+                2
             ]
         }
     ],
     "nodes" : [
         {
-            "mesh" : 0,
-            "name" : "Circle",
-            "rotation" : [
-                -0.3420875072479248,
-                -0.40906381607055664,
-                0.5562629699707031,
-                0.637349545955658
-            ],
-            "scale" : [
-                0.23420581221580505,
-                0.4949566423892975,
-                0.4018872082233429
-            ],
-            "translation" : [
-                0.174965500831604,
-                0.16385500133037567,
-                0.48708081245422363
-            ]
-        },
-        {
-            "name" : "Lamp",
+            "name" : "Light",
             "rotation" : [
                 0.16907575726509094,
                 0.7558803558349609,
@@ -59,23 +38,23 @@
                 0.7804827094078064
             ],
             "translation" : [
-                5.196630954742432,
-                4.991138935089111,
-                6.5076398849487305
+                7.358891487121582,
+                4.958309173583984,
+                6.925790786743164
             ]
         },
         {
-            "name" : "Lamp.001",
-            "rotation" : [
-                0.16907575726509094,
-                0.7558803558349609,
-                -0.27217137813568115,
-                0.570947527885437
+            "mesh" : 0,
+            "name" : "Cylinder",
+            "scale" : [
+                0.1612844616174698,
+                0.025951437652111053,
+                0.1612844616174698
             ],
             "translation" : [
-                -1.6001853942871094,
-                3.889510154724121,
-                5.563713550567627
+                0,
+                0.05883660167455673,
+                0
             ]
         }
     ],
@@ -83,28 +62,20 @@
         {
             "doubleSided" : true,
             "name" : "Material.001",
-            "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    0.5005183219909668,
-                    0.2319299727678299,
-                    0.8000000715255737,
-                    1
-                ],
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.5
-            }
+            "pbrMetallicRoughness" : {}
         }
     ],
     "meshes" : [
         {
-            "name" : "Circle.001",
+            "name" : "Cylinder",
             "primitives" : [
                 {
                     "attributes" : {
                         "POSITION" : 0,
-                        "NORMAL" : 1
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
                     },
-                    "indices" : 2,
+                    "indices" : 3,
                     "material" : 0
                 }
             ]
@@ -114,53 +85,64 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 1282,
+            "count" : 288,
             "max" : [
-                1.0989999771118164,
-                2.0759263038635254,
-                1.935417652130127
+                1.943803071975708,
+                0.05242651700973511,
+                1.9519121646881104
             ],
             "min" : [
-                -1.0989999771118164,
-                -0.015171341598033905,
-                -2.425816059112549
+                -1.954279899597168,
+                -1.7705340385437012,
+                -1.9461709260940552
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 1282,
+            "count" : 288,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 288,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 2088,
+            "count" : 474,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 15384,
+            "byteLength" : 3456,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 15384,
-            "byteOffset" : 15384
+            "byteLength" : 3456,
+            "byteOffset" : 3456
         },
         {
             "buffer" : 0,
-            "byteLength" : 4176,
-            "byteOffset" : 30768
+            "byteLength" : 2304,
+            "byteOffset" : 6912
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 948,
+            "byteOffset" : 9216
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 34944,
-            "uri" : "water.bin"
+            "byteLength" : 10164,
+            "uri" : "paper-plate.bin"
         }
     ]
 }
