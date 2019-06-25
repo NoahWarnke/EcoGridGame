@@ -80,7 +80,8 @@ export default class GameBoard {
       winBoard: 'sounds/ecogames_finished_board.mp3',
       winGame: 'sounds/ecogames_finished_everything.mp3',
       slide0: 'sounds/ecogames_swoosh1.mp3',
-      slide1: 'sounds/ecogames_swoosh2.mp3'
+      slide1: 'sounds/ecogames_swoosh2.mp3',
+      needdrone: 'sounds/ecogames_need_drone.mp3'
     }
     
     // Set up clips, sources, entities for sounds.
@@ -155,7 +156,8 @@ export default class GameBoard {
     // Make sure player has a drone.
     if (!this.hangar.playerHasDrone) {
       // TODO inform player they need to get a drone, somehow.
-      log('No drone, no play.');
+      this.audioSources.needdrone.playing = false;
+      this.audioSources.needdrone.playOnce();
       return;
     }
     
