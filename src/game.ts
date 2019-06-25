@@ -9,10 +9,6 @@ import {DroneHangar} from 'dronehangar';
 import {Landscape} from 'landscape';
 import {NPC} from 'npc';
 
-// Temporary.
-import {Carryable, CarryableSystem} from 'carryable';
-engine.addSystem(new CarryableSystem());
-
 // This will be shared into any objects that need to know global info about game state.
 let globalGameState = {
   totalGames: 0,
@@ -176,7 +172,7 @@ let gameSpecs: IGameBoardSpecification[] = [
   {
     dimensions: {x: 6, y: 6},
     transform: new Transform({
-      position: new Vector3(10.85, 2.95, 17.63)
+      position: new Vector3(10.85, 3.05, 17.63)
     }),
     pieceTypes: [
       // Landfill

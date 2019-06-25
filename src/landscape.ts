@@ -1,5 +1,3 @@
-import {Carryable, CarryableSystem} from 'carryable';
-
 
 /**
  * Creates all the landscape items with no interactions.
@@ -15,8 +13,6 @@ export class Landscape {
     this.createPond();
     this.createBillboard();
     this.createTrees();
-    
-    engine.addSystem(new CarryableSystem()); // temp
   }
   
   private createHeightmap() {
@@ -107,25 +103,25 @@ export class Landscape {
     
     // One entry per actual instance of a tree.
     let trees = [
-      {transform: {position: new Vector3(43, 2.71, 30.2), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.dead},
+      {transform: {position: new Vector3(39.90, 2.29, 35.40), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.dead},
       {transform: {position: new Vector3(13.4, 7, 57.4), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bushy},
-      {transform: {position: new Vector3(7.5, 3.3, 75.5), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bushy},
-      {transform: {position: new Vector3(25.9, 2.3, 50), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple},
+      {transform: {position: new Vector3(7.5, 3.3, 75.5), rotation: Quaternion.Euler(0, -150, 0)}, type: treeTypes.bushy},
+      {transform: {position: new Vector3(25.70, 2.02, 50.15), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple},
 
       {transform: {position: new Vector3(61.9, 2.7, 49.45), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.high_palm},
       {transform: {position: new Vector3(66.3, 2.7, 63.2), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.high_palm},
 
       {transform: {position: new Vector3(30.64, 1.51, 69.0), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
-      {transform: {position: new Vector3(23.627, 1.955, 55.754), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
+      {transform: {position: new Vector3(22.32, 2.14, 54.82), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
 
-      {transform: {position: new Vector3(45.56, 1.96, 32.07), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
+      {transform: {position: new Vector3(46.21, 1.96, 38.92), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
       {transform: {position: new Vector3(61.59, 2.31, 27.86), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
-      {transform: {position: new Vector3(44.09, 1.86, 33.11), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
+      {transform: {position: new Vector3(16.4, -0.43, 10.27), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.mush1},
 
-      {transform: {position: new Vector3(42.6, 3.69, 33.81), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
+      {transform: {position: new Vector3(43.58, 3.99, 38.63), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
       {transform: {position: new Vector3(48.72, 3.56, 29.05), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
-      {transform: {position: new Vector3(77.08, 0.71, 3.04), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
-      {transform: {position: new Vector3(77.28, 0.543, 4.79), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
+      {transform: {position: new Vector3(71.21, 0.78, 2.71), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
+      {transform: {position: new Vector3(74.17, 1.75, 7.96), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
       {transform: {position: new Vector3(77.96, 0.543, 8.126), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wheat},
 
       {transform: {position: new Vector3(30.64, -0.319, 5.21), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.ficus},
@@ -135,18 +131,18 @@ export class Landscape {
 
       {transform: {position: new Vector3(7.41, -0.56, 4.7), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.wide_palm},
 
-      {transform: {position: new Vector3(69.5, 3.14, 11.1), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
-      {transform: {position: new Vector3(65.09, 7.50, 79.98), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
-      {transform: {position: new Vector3(16.40, -0.43, 10.27), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
-      {transform: {position: new Vector3(72.70, 0.99, 43.58), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
-      {transform: {position: new Vector3(31.47, 13.01, 35.91), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
+      {transform: {position: new Vector3(69.5, 3.14, 11.1), rotation: Quaternion.Euler(0, 0, 0)}, type: treeTypes.maple_red},
+      {transform: {position: new Vector3(65.09, 7.50, 79.98), rotation: Quaternion.Euler(0, 80, 0)}, type: treeTypes.maple_red},
+      {transform: {position: new Vector3(16.40, -0.43, 10.27), rotation: Quaternion.Euler(0, 160, 0)}, type: treeTypes.maple_red},
+      {transform: {position: new Vector3(72.70, 0.99, 43.58), rotation: Quaternion.Euler(0, 130, 0)}, type: treeTypes.maple_red},
+      {transform: {position: new Vector3(19.16, 4.58, 32.28), rotation: Quaternion.Euler(0, -50, 0)}, type: treeTypes.maple_red},
       {transform: {position: new Vector3(9.74, 1.62, 23.74), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.maple_red},
 
       {transform: {position: new Vector3(45.84, 2.56, 36.55), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
-      {transform: {position: new Vector3(78.72, -0.24, 9.46), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
+      {transform: {position: new Vector3(77.90, 0.32, 25.16), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
       {transform: {position: new Vector3(78.08, -0.15, 6.89), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(66.26, 2.65, 8.69), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
-      {transform: {position: new Vector3(75.50, -0.05, 4.45), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower4},
+      {transform: {position: new Vector3(67.53, -0.15, 1.86), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower4},
 
       {transform: {position: new Vector3(15.48, 4.23, 73.40), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(11.76, 6.49, 75.33), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
@@ -155,11 +151,11 @@ export class Landscape {
       {transform: {position: new Vector3(40.69, 3.06, 11.74), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(41.41, 2.53, 7.45), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(43.56, 3.13, 11.78), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
-      {transform: {position: new Vector3(46.95, 2.85, 30.11), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
+      {transform: {position: new Vector3(46.48, 2.84, 28.87), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(43.73, 6.24, 18.30), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(57.53, 3.10, 45.37), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(63.26, 2.91, 51.92), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
-      {transform: {position: new Vector3(45.13, 2.82, 33.92), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
+      {transform: {position: new Vector3(43.12, 2.88, 36.06), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(23.56, -1.49, 89.63), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(33.93, 2.11, 68.53), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(24.24, 3.03, 53.08), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
@@ -181,8 +177,8 @@ export class Landscape {
       {transform: {position: new Vector3(17.23, -0.47, 5.38), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(19.55, -0.37, 7.97), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(19.61, -0.48, 7.88), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower4},
-      {transform: {position: new Vector3(12.21, 2.55, 16.32), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
-      {transform: {position: new Vector3(8.25, 2.37, 15.38), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
+      {transform: {position: new Vector3(14.58, 2.55, 14.70), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
+      {transform: {position: new Vector3(7.98, 2.62, 13.39), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower1},
       {transform: {position: new Vector3(8.27, 2.64, 30.62), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower2},
       {transform: {position: new Vector3(14.93, 5.57, 35.73), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower3},
       {transform: {position: new Vector3(12.70, 6.23, 44.23), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.flower4},
@@ -210,7 +206,7 @@ export class Landscape {
 
       {transform: {position: new Vector3(26.7, 4.553, 23.48), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
       {transform: {position: new Vector3(19.756, -0.9, 5.53), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
-      {transform: {position: new Vector3(10.15, 2.7, 17.08), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
+      {transform: {position: new Vector3(11.15, 2.68, 13.43), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
       {transform: {position: new Vector3(4.24, -0.61, 87.26), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
       {transform: {position: new Vector3(45.79, 1.588, 91), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
       {transform: {position: new Vector3(56, 3.05, 90.47), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.banana},
@@ -225,8 +221,9 @@ export class Landscape {
       {transform: {position: new Vector3(74.14, 1.94, 39.49), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bush1},
       {transform: {position: new Vector3(75.36, -1.24, 87.08), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bush1},
 
-      {transform: {position: new Vector3(39.45, 6.62, 42.47), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bush2}
-    ]
+      {transform: {position: new Vector3(39.45, 6.62, 42.47), rotation: Quaternion.Euler(0, 20, 0)}, type: treeTypes.bush2},
+      {transform: {position: new Vector3(29.23, 2.68, 85.47), rotation: Quaternion.Euler(0, -70, 0)}, type: treeTypes.bushy},
+    ];
     
     // Create tree entities!
     for (let i = 0; i < trees.length; i++) {
@@ -240,16 +237,22 @@ export class Landscape {
       tree.addComponent(trees[i].type.model);
       
       // Temp
+      /*
       let treeCarry = new Carryable();
       tree.addComponent(treeCarry);
       tree.addComponent(new OnClick(() => {
+        if (!treeCarry.beingCarried) {
+          log("Start: " + treeTransform.position.x + ", " + treeTransform.position.y + ", " + treeTransform.position.z);
+        }
+        else {
+          log("Stop: " + treeTransform.position.x.toFixed(2) + ", " + treeTransform.position.y.toFixed(2) + ", " + treeTransform.position.z.toFixed(2));
+        }
         treeCarry.toggleCarry(treeTransform);
       }));
+      */
       
       this.trees.push(tree);
       engine.addEntity(tree);
     }
-    
-    
   }
 }
