@@ -23,14 +23,28 @@ engine.addSystem(new DroneSystem());
 // Non-interactive landscape elements.
 let landscape = new Landscape();
 
-
-
 // NPCs.
 let droneMechanic = new NPC(
   new Transform({position: new Vector3(33, 2.93, 87)}),
   new GLTFShape('models/npcs/mechanic_temp.glb'),
-  new AudioClip('sounds/ecogames_mechanic_pre.wav'),
-  new AudioClip('sounds/ecogames_mechanic_post.wav'),
+  new AudioClip('sounds/ecogames_mechanic_pre.mp3'),
+  new AudioClip('sounds/ecogames_mechanic_post.mp3'),
+  globalGameState
+);
+
+let hiker = new NPC(
+  new Transform({position: new Vector3(62.29, 2.73, 61.43)}),
+  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new AudioClip('sounds/ecogames_hiker_pre.mp3'),
+  new AudioClip('sounds/ecogames_hiker_post.mp3'),
+  globalGameState
+);
+
+let girl = new NPC(
+  new Transform({position: new Vector3(26.17, 14.4, 37.62)}),
+  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new AudioClip('sounds/ecogames_girl_pre.mp3'),
+  new AudioClip('sounds/ecogames_girl_post.mp3'),
   globalGameState
 );
 

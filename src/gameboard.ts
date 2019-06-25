@@ -86,7 +86,6 @@ export default class GameBoard {
     // Set up clips, sources, entities for sounds.
     this.audioSources = {};
     for (let srcName in audioSrcs) {
-      log(srcName);
       let entity = new Entity();
       let clip = new AudioClip(audioSrcs[srcName]);
       let audioSource = new AudioSource(clip);
@@ -95,7 +94,6 @@ export default class GameBoard {
       entity.addComponent(audioSource);
       entity.setParent(this.gameGroup);
     }
-    log (this.audioSources);
     
     this.animating = false;
   }

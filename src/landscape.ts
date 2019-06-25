@@ -24,6 +24,12 @@ export class Landscape {
       rotation: Quaternion.Euler(0, 180, 0)
     }));
     this.heightmap.addComponent(new GLTFShape('models/landscape/terrain-smooth-separate.gltf'));
+    
+    // Temp
+    this.heightmap.addComponent(new OnClick(() => {
+      log(Camera.instance.position);
+    }));
+    
     engine.addEntity(this.heightmap);
   }
   
