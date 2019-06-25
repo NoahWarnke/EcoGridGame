@@ -136,8 +136,7 @@ let gameSpecs: IGameBoardSpecification[] = [
   {
     dimensions: {x: 4, y: 4},
     transform: new Transform({
-      position: new Vector3(65.5, 3.09, 54),
-      rotation: Quaternion.Euler(3, 0, 0)
+      position: new Vector3(65.5, 3.09, 54)
     }),
     pieceTypes: [
       // Landfill

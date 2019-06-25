@@ -11,7 +11,8 @@
                 0,
                 1,
                 2,
-                3
+                3,
+                4
             ]
         }
     ],
@@ -51,6 +52,10 @@
         {
             "mesh" : 1,
             "name" : "Cube.001"
+        },
+        {
+            "mesh" : 2,
+            "name" : "the_collider"
         }
     ],
     "materials" : [
@@ -89,6 +94,20 @@
                         "POSITION" : 4,
                         "NORMAL" : 5,
                         "TEXCOORD_0" : 6
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Cube.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 7,
+                        "NORMAL" : 8,
+                        "TEXCOORD_0" : 9
                     },
                     "indices" : 3,
                     "material" : 0
@@ -148,6 +167,34 @@
             "componentType" : 5126,
             "count" : 36,
             "max" : [
+                0.5053371787071228,
+                1.835741400718689,
+                0.6453912854194641
+            ],
+            "min" : [
+                -0.5053371787071228,
+                0.8739283084869385,
+                -0.6453912854194641
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 36,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 36,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 36,
+            "max" : [
                 0.5541778802871704,
                 1.9738869667053223,
                 0.7077682018280029
@@ -160,13 +207,13 @@
             "type" : "VEC3"
         },
         {
-            "bufferView" : 5,
+            "bufferView" : 8,
             "componentType" : 5126,
             "count" : 36,
             "type" : "VEC3"
         },
         {
-            "bufferView" : 6,
+            "bufferView" : 9,
             "componentType" : 5126,
             "count" : 36,
             "type" : "VEC2"
@@ -207,11 +254,26 @@
             "buffer" : 0,
             "byteLength" : 288,
             "byteOffset" : 2124
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 432,
+            "byteOffset" : 2412
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 432,
+            "byteOffset" : 2844
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 3276
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 2412,
+            "byteLength" : 3564,
             "uri" : "trash-bin.bin"
         }
     ]
