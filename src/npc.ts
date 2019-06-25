@@ -6,7 +6,7 @@
 export class NPC {
   
   private globalGameState: {totalGames: number, finishedGames: number};
-  private entity: IEntity;
+  public entity: IEntity;
   private audioSources: {[index: string]: AudioSource};
   private autoSpeak: boolean;
   

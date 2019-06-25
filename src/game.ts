@@ -25,8 +25,8 @@ let landscape = new Landscape();
 
 // NPCs.
 let droneMechanic = new NPC(
-  new Transform({position: new Vector3(33, 2.93, 87)}),
-  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new Transform({position: new Vector3(33, 3, 87), rotation: Quaternion.Euler(0, 90, 0) }),
+  new GLTFShape('models/npcs/woman.glb'),
   new AudioClip('sounds/ecogames_mechanic_pre.mp3'),
   new AudioClip('sounds/ecogames_mechanic_post.mp3'),
   globalGameState
@@ -42,19 +42,32 @@ let hiker = new NPC(
 
 let girl = new NPC(
   new Transform({position: new Vector3(26.17, 14.4, 37.62)}),
-  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new GLTFShape('models/npcs/farmGirl.glb'),
   new AudioClip('sounds/ecogames_girl_pre.mp3'),
   new AudioClip('sounds/ecogames_girl_post.mp3'),
   globalGameState
 );
 
 let boy = new NPC(
-  new Transform({position: new Vector3(27.24, 2.05, 58.5), scale: new Vector3(0.6, 0.6, 0.6)}),
-  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new Transform({position: new Vector3(27.24, 2.05, 58.5), scale: new Vector3(0.1, 0.1, 0.1)}),
+  new GLTFShape('models/npcs/boy.glb'),
   new AudioClip('sounds/ecogames_boy_pre.mp3'),
   new AudioClip('sounds/ecogames_boy_post.mp3'),
   globalGameState
 );
+
+// Assign animations, for now just idle looping ones
+let mechanicAnimator = new Animator();
+droneMechanic.entity.addComponent(mechanicAnimator);
+let mechanicIdleAnim = new AnimationState("ArmatureAction");
+mechanicAnimator.addClip(mechanicIdleAnim);
+mechanicIdleAnim.play();
+
+let boyAnimator = new Animator();
+boy.entity.addComponent(boyAnimator);
+let boyIdleAnim = new AnimationState("metarigAction");
+boyAnimator.addClip(boyIdleAnim);
+boyIdleAnim.play();
 
 // Drone hangar for spawning drones.
 let hangar = new DroneHangar(new Transform({

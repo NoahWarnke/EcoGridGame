@@ -57,6 +57,7 @@ export class DroneHangar {
     // When button is clicked, make it spawn a drone.
     button.addComponent(new OnClick(() => {
       this.createDrone();
+      this.doorOpenClip.play()
     }));
     
     // Instructions billboards
