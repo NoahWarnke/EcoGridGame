@@ -89,6 +89,7 @@ export class Drone {
     );
     random = random.normalize().scale(Math.random() * 5 + 5); // Go between 5 and 10m away.
     this.targetPos = random.add(Camera.instance.position);
+    this.targetPos.y += 2.42; // correction for camera.
     
     // Make sure it stays in the scene.
     this.targetPos.x = Math.min(79, Math.max(1, this.targetPos.x));

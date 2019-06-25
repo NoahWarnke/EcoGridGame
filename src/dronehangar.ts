@@ -7,7 +7,7 @@ export class DroneHangar {
   
   public rootGroup: Entity;
   public hangar: Entity;
-  public hangarAnimator: Animator;
+  public doorOpenClip: AnimationState;
   
   public playerHasDrone: boolean;
   public playerDrone: Entity;
@@ -26,18 +26,77 @@ export class DroneHangar {
     this.hangar.addComponent(new Transform({scale: new Vector3(0.8, 0.8, 0.8)}));
     
     // Enable animations of hangar.
-    this.hangarAnimator = new Animator();
-    this.hangar.addComponent(this.hangarAnimator);
+    let hangarAnimator = new Animator();
+    this.hangar.addComponent(hangarAnimator);
     
     // Twirling radar animation
     let radarSpinClip = new AnimationState("radar-rotate");
-    this.hangarAnimator.addClip(radarSpinClip);
+    hangarAnimator.addClip(radarSpinClip);
     radarSpinClip.play();
     
-    // When drone hangar is clicked, make it spawn a drone.
-    this.hangar.addComponent(new OnClick(() => {
+    // Set up hangar door anim.
+    this.doorOpenClip = new AnimationState("open-door");
+    hangarAnimator.addClip(this.doorOpenClip);
+    this.doorOpenClip.looping = false;
+    
+    // Launch button!
+    let button = new Entity();
+    let cyl = new CylinderShape();
+    cyl.radiusTop = 1;
+    button.addComponent(cyl);
+    let red = new Material();
+    red.albedoColor = Color3.Red();
+    button.addComponent(red);
+    button.addComponent(new Transform({
+      position: new Vector3(-1.6, 0.6, 0),
+      rotation: Quaternion.Euler(0, 0, 90),
+      scale: new Vector3(0.3, 0.1, 0.3)
+    }));
+    button.setParent(this.rootGroup);
+    
+    // When button is clicked, make it spawn a drone.
+    button.addComponent(new OnClick(() => {
       this.createDrone();
     }));
+    
+    // Instructions billboards
+    let billboard1 = new Entity();
+    billboard1.addComponent(new PlaneShape());
+    billboard1.addComponent(new Transform({
+      position: new Vector3(-1.7, 1.6, 2.75),
+      rotation: Quaternion.Euler(0, 90, 180),
+      scale: new Vector3(1.4, 1.4, 1)
+    }));
+    let billMat1 = new Material();
+    billMat1.albedoTexture = new Texture('textures/how-to-play-1.png');
+    billboard1.addComponent(billMat1);
+    billboard1.setParent(this.rootGroup);
+    
+    let billboard2 = new Entity();
+    billboard2.addComponent(new PlaneShape());
+    billboard2.addComponent(new Transform({
+      position: new Vector3(-1.7, 1.6, -2.75),
+      rotation: Quaternion.Euler(0, 90, 180),
+      scale: new Vector3(1.4, 1.4, 1)
+    }));
+    let billMat2 = new Material();
+    billMat2.albedoTexture = new Texture('textures/how-to-play-2.png');
+    billboard2.addComponent(billMat2);
+    billboard2.setParent(this.rootGroup);
+    
+    let billboard3 = new Entity();
+    billboard3.addComponent(new PlaneShape());
+    billboard3.addComponent(new Transform({
+      position: new Vector3(-1.4, 2, -5.2),
+      rotation: Quaternion.Euler(0, 90, 180),
+      scale: new Vector3(2, 2, 1)
+    }));
+    let billMat3 = new Material();
+    billMat3.transparencyMode = 2;
+    billMat3.albedoTexture = new Texture('textures/ecogames_trash.png');
+    billboard3.addComponent(billMat3);
+    billboard3.setParent(this.rootGroup);
+
   }
   
   public createDrone() {
@@ -80,10 +139,7 @@ export class DroneHangar {
   }
   
   public playLaunchAnimation() {
-    let doorOpenClip = new AnimationState("open-door");
-    this.hangarAnimator.addClip(doorOpenClip);
-    doorOpenClip.looping = false;
-    doorOpenClip.play();
+    this.doorOpenClip.play();
   }
   
   public playLaunchSound() {
