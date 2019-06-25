@@ -58,6 +58,7 @@ export class NPC {
   }
   
   public faceUser() {
+    
     let transf = this.entity.getComponent(Transform);
     let diff = Camera.instance.position.subtract(transf.position);
     transf.rotation = Quaternion.Euler(0, Math.atan2(diff.x, diff.z) * 180 / Math.PI, 0);

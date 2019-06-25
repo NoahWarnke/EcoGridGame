@@ -33,7 +33,7 @@ let droneMechanic = new NPC(
 );
 
 let hiker = new NPC(
-  new Transform({position: new Vector3(52.14, 3.1, 42)}),
+  new Transform({position: new Vector3(48.84442138671875, 3, 8.56)}),
   new GLTFShape('models/npcs/mechanic_temp.glb'),
   new AudioClip('sounds/ecogames_hiker_pre.mp3'),
   new AudioClip('sounds/ecogames_hiker_post.mp3'),
@@ -45,6 +45,14 @@ let girl = new NPC(
   new GLTFShape('models/npcs/mechanic_temp.glb'),
   new AudioClip('sounds/ecogames_girl_pre.mp3'),
   new AudioClip('sounds/ecogames_girl_post.mp3'),
+  globalGameState
+);
+
+let boy = new NPC(
+  new Transform({position: new Vector3(27.24, 2.05, 58.5), scale: new Vector3(0.6, 0.6, 0.6)}),
+  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new AudioClip('sounds/ecogames_boy_pre.mp3'),
+  new AudioClip('sounds/ecogames_boy_post.mp3'),
   globalGameState
 );
 
@@ -83,18 +91,6 @@ let pieceModels: {[index: string]: [Shape, number]} = {
   'rock1': [new GLTFShape('models/nature/rock1.gltf'), 0.02],
   'rock2': [new GLTFShape('models/nature/rock2.gltf'), 0.02],
 };
-/*
-let i = 0;
-for (let type in pieceModels) {
-  let entity = new Entity();
-  entity.addComponent(new Transform({
-    position: new Vector3((i++) * 2 + 2, 0, 8),
-    scale: new Vector3(pieceModels[type][1], pieceModels[type][1], pieceModels[type][1])
-  }));
-  entity.addComponent(pieceModels[type][0]);
-  engine.addEntity(entity);
-}
-*/
 
 let recycleBin = new GLTFShape('models/trash/bins/recycle-bin.gltf');
 let landfillBin = new GLTFShape('models/trash/bins/trash-bin.gltf');
