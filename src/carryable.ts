@@ -25,7 +25,7 @@ export class Carryable {
     
     if (!this.beingCarried) {
       this.relativeTransform = undefined;
-      log(myTransform.position);
+      log("POSITION: " + myTransform.position.x.toFixed(2) + ", " + myTransform.position.y.toFixed(2) + ", " + myTransform.position.z.toFixed(2));
       return;
     }
     
