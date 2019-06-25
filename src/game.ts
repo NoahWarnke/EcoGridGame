@@ -33,8 +33,8 @@ let droneMechanic = new NPC(
 );
 
 let hiker = new NPC(
-  new Transform({position: new Vector3(48.84442138671875, 3, 8.56)}),
-  new GLTFShape('models/npcs/mechanic_temp.glb'),
+  new Transform({position: new Vector3(48.84442138671875, 3, 8.56), scale: new Vector3(0.09, 0.09, 0.09)}),
+  new GLTFShape('models/npcs/hiker.gltf'),
   new AudioClip('sounds/ecogames_hiker_pre.mp3'),
   new AudioClip('sounds/ecogames_hiker_post.mp3'),
   globalGameState
