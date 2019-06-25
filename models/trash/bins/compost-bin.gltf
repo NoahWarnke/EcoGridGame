@@ -12,7 +12,9 @@
                 1,
                 2,
                 3,
-                4
+                4,
+                5,
+                6
             ]
         }
     ],
@@ -56,6 +58,14 @@
         {
             "mesh" : 2,
             "name" : "the_collider"
+        },
+        {
+            "mesh" : 3,
+            "name" : "Cube.002"
+        },
+        {
+            "mesh" : 4,
+            "name" : "Cube.003"
         }
     ],
     "materials" : [
@@ -110,6 +120,34 @@
                         "TEXCOORD_0" : 10
                     },
                     "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Cube.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 11,
+                        "NORMAL" : 12,
+                        "TEXCOORD_0" : 13
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Cube.004",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 14,
+                        "NORMAL" : 15,
+                        "TEXCOORD_0" : 16
+                    },
+                    "indices" : 7,
                     "material" : 0
                 }
             ]
@@ -223,6 +261,62 @@
             "componentType" : 5126,
             "count" : 72,
             "type" : "VEC2"
+        },
+        {
+            "bufferView" : 11,
+            "componentType" : 5126,
+            "count" : 72,
+            "max" : [
+                0.5541778802871704,
+                1.9738869667053223,
+                0.7077682018280029
+            ],
+            "min" : [
+                -0.5541778802871704,
+                0.019198060035705566,
+                -0.7077682018280029
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 12,
+            "componentType" : 5126,
+            "count" : 72,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 13,
+            "componentType" : 5126,
+            "count" : 72,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 14,
+            "componentType" : 5126,
+            "count" : 56,
+            "max" : [
+                0.5131711363792419,
+                1.9102330207824707,
+                0.6553964018821716
+            ],
+            "min" : [
+                -0.5131711363792419,
+                0.24316388368606567,
+                -0.6553964018821716
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 15,
+            "componentType" : 5126,
+            "count" : 56,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 16,
+            "componentType" : 5126,
+            "count" : 56,
+            "type" : "VEC2"
         }
     ],
     "bufferViews" : [
@@ -280,11 +374,41 @@
             "buffer" : 0,
             "byteLength" : 576,
             "byteOffset" : 6208
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 864,
+            "byteOffset" : 6784
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 864,
+            "byteOffset" : 7648
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 576,
+            "byteOffset" : 8512
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 672,
+            "byteOffset" : 9088
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 672,
+            "byteOffset" : 9760
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 448,
+            "byteOffset" : 10432
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 6784,
+            "byteLength" : 10880,
             "uri" : "compost-bin.bin"
         }
     ]
