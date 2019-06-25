@@ -48,8 +48,8 @@ export class NPC {
   
   public speak() {
     if (this.globalGameState.totalGames === this.globalGameState.finishedGames) {
-      this.audioSources.pre.playing = false; // This doesn't work :(
-      this.audioSources.pre.playOnce();
+      this.audioSources.post.playing = false; // This doesn't work :(
+      this.audioSources.post.playOnce();
     }
     else {
       this.audioSources.pre.playing = false; // This doesn't work :(

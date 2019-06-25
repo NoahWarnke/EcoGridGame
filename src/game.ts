@@ -33,7 +33,7 @@ let droneMechanic = new NPC(
 );
 
 let hiker = new NPC(
-  new Transform({position: new Vector3(62.29, 2.73, 61.43)}),
+  new Transform({position: new Vector3(52.14, 3.1, 42)}),
   new GLTFShape('models/npcs/mechanic_temp.glb'),
   new AudioClip('sounds/ecogames_hiker_pre.mp3'),
   new AudioClip('sounds/ecogames_hiker_post.mp3'),
@@ -101,9 +101,9 @@ let landfillBin = new GLTFShape('models/trash/bins/trash-bin.gltf');
 let compostBin = new GLTFShape('models/trash/bins/compost-bin.gltf');
 
 let gameSpecs: IGameBoardSpecification[] = [
-  // 4x4 with just trash bag versus bottle.
+  // Super simple intro 3x3
   {
-    dimensions: {x: 4, y: 4},
+    dimensions: {x: 3, y: 3},
     transform: new Transform({
       position: new Vector3(24.81, 3.05, 85.193),
       rotation: Quaternion.Euler(3, 0, 0)
@@ -113,7 +113,7 @@ let gameSpecs: IGameBoardSpecification[] = [
       {
           receptacleShape: landfillBin,
           receptacleTransform: new Transform({
-            position: new Vector3(-4, 0, -1),
+            position: new Vector3(-3.5, 0, -1),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.trashbag] // can't define in place, for some reason.
@@ -122,7 +122,38 @@ let gameSpecs: IGameBoardSpecification[] = [
       {
           receptacleShape: recycleBin,
           receptacleTransform: new Transform({
-            position: new Vector3(-4, 0, 1),
+            position: new Vector3(-3.5, 0, 1),
+            scale: new Vector3(0.5, 0.5, 0.5)
+          }),
+          shapes: [pieceModels.bottle]
+      },
+    ],
+    // Nature
+    donePieceShapes: [pieceModels.rock0, pieceModels.rock1, pieceModels.rock2],
+    hangar
+  },
+  // 4x4 with just trash bag versus bottle.
+  {
+    dimensions: {x: 4, y: 4},
+    transform: new Transform({
+      position: new Vector3(65.5, 3.09, 54),
+      rotation: Quaternion.Euler(3, 0, 0)
+    }),
+    pieceTypes: [
+      // Landfill
+      {
+          receptacleShape: landfillBin,
+          receptacleTransform: new Transform({
+            position: new Vector3(-0.5, 0, 7),
+            scale: new Vector3(0.5, 0.5, 0.5)
+          }),
+          shapes: [pieceModels.trashbag] // can't define in place, for some reason.
+      },
+      // Recycling
+      {
+          receptacleShape: recycleBin,
+          receptacleTransform: new Transform({
+            position: new Vector3(1, 0, 7),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
           shapes: [pieceModels.soda]
@@ -225,7 +256,7 @@ let gameSpecs: IGameBoardSpecification[] = [
             position: new Vector3(0, 0, 4.4),
             scale: new Vector3(0.5, 0.5, 0.5)
           }),
-          shapes: [pieceModels.wine, pieceModels.newspaper, pieceModels.sugar]
+          shapes: [pieceModels.bottle /* wine */, pieceModels.newspaper, pieceModels.sugar]
       },
       // Compost
       {
